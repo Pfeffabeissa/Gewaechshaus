@@ -1,0 +1,1 @@
+#define MOSFET_K1 39

@@ -1,0 +1,1 @@
+void setSystemPowerSupply(boolean newState);
