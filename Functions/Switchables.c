@@ -11,6 +11,16 @@ void setSystemPowerSupply(boolean newState) {
     }
 }
 
+// Schaltet die Stromversorgung der Wasserpumpe und des Dachmotors, true = an, false = aus
+void setMotorDriverPowerSupply(boolean newState) {
+    if(newState) {
+        digitalWrite(MOSFET_K2, HIGH);
+    }
+    else {
+        digitalWrite(MOSFET_K2, LOW);
+    }
+}
+
 // Schaltet die Stromversorgung der analogen Sensoren, true = an, false = aus
 void setAnalogSensorsPowerSupply(boolean newState) {
     if(newState) {
