@@ -2,7 +2,7 @@
 #include "Constants.h"
 
 // Ändert den Stromversorgungsmodus, true entspricht Batteriestromversorgung, false entspricht button
-void setSystemPowerSupply(boolean newState) {
+void setSystemPowerSupply(bool newState) {
     if(newState) {
         digitalWrite(MOSFET_K1, HIGH);
     }
@@ -12,7 +12,7 @@ void setSystemPowerSupply(boolean newState) {
 }
 
 // Schaltet die Stromversorgung der Wasserpumpe und des Dachmotors, true = an, false = aus
-void setMotorDriverPowerSupply(boolean newState) {
+void setMotorDriverPowerSupply(bool newState) {
     if(newState) {
         digitalWrite(MOSFET_K2, HIGH);
     }
@@ -22,7 +22,7 @@ void setMotorDriverPowerSupply(boolean newState) {
 }
 
 // Schaltet die Stromversorgung der analogen Sensoren, true = an, false = aus
-void setAnalogSensorsPowerSupply(boolean newState) {
+void setAnalogSensorsPowerSupply(bool newState) {
     if(newState) {
         digitalWrite(MOSFET_K3, HIGH);
     }

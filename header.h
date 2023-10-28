@@ -1,3 +1,3 @@
-void setSystemPowerSupply(boolean newState);
-void setAnalogSensorsPowerSupply(boolean newState);
-void setMotorDriverPowerSupply(boolean newState);
+void setSystemPowerSupply(bool newState);
+void setAnalogSensorsPowerSupply(bool newState);
+void setMotorDriverPowerSupply(bool newState);
