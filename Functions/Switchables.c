@@ -10,3 +10,13 @@ void setSystemPowerSupply(boolean newState) {
         digitalWrite(MOSFET_K1, LOW);
     }
 }
+
+// Schaltet die Stromversorgung der analogen Sensoren, true = an, false = aus
+void setAnalogSensorsPowerSupply(boolean newState) {
+    if(newState) {
+        digitalWrite(MOSFET_K3, HIGH);
+    }
+    else {
+        digitalWrite(MOSFET_K3, LOW);
+    }
+}
