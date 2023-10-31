@@ -5,7 +5,8 @@
 #include <U8glib.h>
 
 
-
 void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);
 void setMotorDriverPowerSupply(bool newState);
+
+void regulateRoofMotor(int speed);

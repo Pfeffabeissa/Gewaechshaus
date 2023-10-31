@@ -1,3 +1,13 @@
-#define MOSFET_K1 39
-#define MOSFET_K2 41
-#define MOSFET_K3 43
+// Mosfet Hauptschalter: Stromversorgung des Systems 
+#define PIN_MOSFET_SYSTEM_POWER 39
+// Mosfet Stromversorgung Motortreiber
+#define PIN_MOSFET_MOTOR_DRIVERS 41
+// Mosfet Stromversorgung analoge Sensoren
+#define PIN_MOSFET_ANALOGS 43
+
+// Analoger Ausgang für Dachgeschwindigkeit
+#define PIN_ROOF_SPEED 12
+
+// Digitale Ausgänge für Dachrichtung
+#define PIN_ROOF_CLOSING 33
+#define PIN_ROOF_OPENING 31
