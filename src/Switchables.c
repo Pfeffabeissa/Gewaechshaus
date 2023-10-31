@@ -1,5 +1,7 @@
-#include "Header.h"
-#include "Constants.h"
+#include <Constants.h>
+#include <Header.h>
+#include <Arduino.h>
+
 
 // Ändert den Stromversorgungsmodus, true entspricht Batteriestromversorgung, false entspricht button
 void setSystemPowerSupply(bool newState) {
