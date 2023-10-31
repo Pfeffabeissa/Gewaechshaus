@@ -1,6 +1,10 @@
-#include "Arduino.h"
-#include "Wire.h"
+#include <Arduino.h>
+#include <Wire.h>
+
+
 
 void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);
 void setMotorDriverPowerSupply(bool newState);
+void blink(void);
+
