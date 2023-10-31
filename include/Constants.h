@@ -11,3 +11,9 @@
 // Digitale Ausgänge für Dachrichtung
 #define PIN_ROOF_CLOSING 33
 #define PIN_ROOF_OPENING 31
+
+// Digitaler Ausgang für Pumpenansteuerung
+#define PIN_PUMP_CONTROL 35
+
+// Analoger Ausgang für Pumpengeschwindigkeit
+#define PIN_PUMP_SPEED

@@ -10,3 +10,4 @@ void setAnalogSensorsPowerSupply(bool newState);
 void setMotorDriverPowerSupply(bool newState);
 
 void regulateRoofMotor(int speed);
+void regulatePump(int speed);
