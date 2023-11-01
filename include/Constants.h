@@ -17,3 +17,6 @@
 
 // Analoger Ausgang für Pumpengeschwindigkeit
 #define PIN_PUMP_SPEED 12
+
+// Wartezeit bis zur ersten Messung der analogen Sensoren nach erster Stromversorgung
+#define ANALOG_SENSORS_PUFFER_TIME 300
