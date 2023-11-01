@@ -16,4 +16,4 @@
 #define PIN_PUMP_CONTROL 35
 
 // Analoger Ausgang für Pumpengeschwindigkeit
-#define PIN_PUMP_SPEED
+#define PIN_PUMP_SPEED 12
