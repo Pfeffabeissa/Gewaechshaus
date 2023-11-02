@@ -7,8 +7,12 @@
 extern uint8_t stateArrayMeasureRequest;
 extern uint8_t stateDisplayMeasureRequest;
 extern uint8_t stateMeasureAllowed;
+extern uint8_t stateMotorRequest;
+extern uint8_t stateMotorAllowed;
 
+void managePowerSupplies();
 void manageSensorPowerSupplies();
+void manageMotorPowerSupplies();
 
 void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);

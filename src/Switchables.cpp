@@ -37,6 +37,11 @@ void setAnalogSensorsPowerSupply(bool newState) {
     }
 }
 
+// Ruft alle stromversorgungsverwaltenden Funktionen auf. Sollte in Zukunft auch Abschalten des gesamten Systems anhand von Batteriespannung beinhalten
+void managePowerSupplies() {
+    manageSensorPowerSupplies();
+    manageMotorPowerSupplies();
+}
 
 // Checkt Requests an Sensoren und erteilt Erlaubnis
 void manageSensorPowerSupplies() {
@@ -76,5 +81,31 @@ void manageSensorPowerSupplies() {
     else if (analogSensorsTurnOnTime == -1) {
         stateMeasureAllowed &= ~2;
         stateMeasureAllowed &= ~4;
+    }
+}
+
+// Checkt Requests an Sensoren und erteilt Erlaubnis
+void manageMotorPowerSupplies() {
+    static uint8_t previousMotorRequest;
+    static uint32_t motorDriverTurnOnTime;
+
+    if (previousMotorRequest != stateMotorRequest) {
+        if (stateMotorRequest & 1 || stateMotorRequest & 2) {
+            setMotorDriverPowerSupply(true);
+            motorDriverTurnOnTime = millis();
+        }
+        else {
+            setMotorDriverPowerSupply(false);
+            motorDriverTurnOnTime = -1;
+        }
+        previousMotorRequest = stateMotorRequest;
+    }
+    if (millis() - motorDriverTurnOnTime >= MOTOR_DRIVER_PUFFER_TIME) {
+        stateMotorAllowed |= 1;
+        stateMotorAllowed |= 2;
+    }
+    else if (motorDriverTurnOnTime == -1) {
+        stateMotorAllowed &= ~2;
+        stateMotorAllowed &= ~4;
     }
 }
