@@ -32,3 +32,12 @@ float readSoilMoisture()
     float soilHumidity = analogRead(PIN_SENSOR_SOIL_HUMIDITY);         
     return (soilHumidity, 0, 1023, 0, 100);                  //Feuchtigkeitswerte von 0% - 100%
 }
+
+// Funktion Batteriespannung messen
+float readBatteryVoltage()
+{
+    float auxiliaryVariable = 0;    // Hilfsvariable zum Einlesen der Spannung
+
+    auxiliaryVariable = (analogRead(PIN_SENSOR_BATTERY_VOLTAGE) * REFERENCE_VOLTAGE) / 1024;       //Einlesen der Spannung und gemäß Spannungsteiler umrechnen
+    return (auxiliaryVariable * (RESISTOR_R1 + RESISTOR_R2)) / RESISTOR_R2;           
+}

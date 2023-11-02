@@ -5,11 +5,13 @@
 // Mosfet Stromversorgung analoge Sensoren
 #define PIN_MOSFET_ANALOGS 43
 
+
+// Anschluss Spannungsmesser
+#define PIN_SENSOR_BATTERY_VOLTAGE A0
 // Anschluss NTC
 #define PIN_SENSOR_NTC A1
 // Anschluss Bodenfeuchtesensor
 #define PIN_SENSOR_SOIL_HUMIDITY A2
-
 
 
 // Analoger Ausgang für Dachgeschwindigkeit

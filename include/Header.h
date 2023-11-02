@@ -22,6 +22,7 @@ float readBmeTemperature();
 float readBmeHumidity();
 float readNtcTemperature();
 float readSoilMoisture();
+float readBatteryVoltage();
 
 void regulateRoofMotor(int speed);
 void regulatePump(int speed);
