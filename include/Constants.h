@@ -5,8 +5,22 @@
 // Mosfet Stromversorgung analoge Sensoren
 #define PIN_MOSFET_ANALOGS 43
 
+// Pins Buttons/Endlagenschalter
+#define UI_BUTTON_RIGHT 32
+#define UI_BUTTON_LEFT 30
+#define UI_BUTTON_TOP 26
+#define UI_BUTTON_BOTTOM 28
+#define ROOF_LIMIT_SWITCH_TOP 22
+#define ROOF_LIMIT_SWITCH_BOTTOM 24
+
+
+// Anschluss Spannungsmesser
+#define PIN_SENSOR_BATTERY_VOLTAGE A0
 // Anschluss NTC
-#define PIN_NTC A1
+#define PIN_SENSOR_NTC A1
+// Anschluss Bodenfeuchtesensor
+#define PIN_SENSOR_SOIL_HUMIDITY A2
+
 
 // Analoger Ausgang für Dachgeschwindigkeit
 #define PIN_ROOF_SPEED 12
