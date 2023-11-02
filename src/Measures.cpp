@@ -8,6 +8,13 @@ float averageTemperatureInside;
 float averageSoilMoisture;
 float averageAirHumidity;
 
+void actualMeasure() {
+
+}
+
+
+
+
 // Ruft alle für Arraymessungen nötigen Funktionen auf
 void arrayMeasure() {
     static bool isArrayMeasurePending = false;
@@ -25,7 +32,7 @@ void arrayMeasure() {
 
 }
 
-// Überprüft, ob das Arraymessungszeitintervall abgelafuen ist
+// Überprüft, ob das Arraymessungszeitintervall abgelaufen ist
 bool checkArrayMeasureSchedule() {
     static uint8_t nextArrayMeasureTime = 0;
     if (millis() >= nextArrayMeasureTime) {

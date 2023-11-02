@@ -6,10 +6,10 @@
 #define PIN_MOSFET_ANALOGS 43
 
 // Pins Buttons/Endlagenschalter
-#define UI_BUTTON_RIGHT 32
-#define UI_BUTTON_LEFT 30
-#define UI_BUTTON_TOP 26
-#define UI_BUTTON_BOTTOM 28
+#define PIN_UI_BUTTON_RIGHT 32
+#define PIN_UI_BUTTON_LEFT 30
+#define PIN_UI_BUTTON_TOP 26
+#define PIN_UI_BUTTON_BOTTOM 28
 #define ROOF_LIMIT_SWITCH_TOP 22
 #define ROOF_LIMIT_SWITCH_BOTTOM 24
 
@@ -54,3 +54,17 @@
 #define NTC_RN   10000          //Widerstand NTC bei 25°
 #define NTC_TN   25             //Temperatur, bei welcher der Widerstand gemessen wurde (25°)
 #define NTC_B   3380            //Thermistorkonstante B von NTC
+
+
+// Parameter Display
+#define KEY_NONE 0
+#define KEY_ENTER 1
+#define KEY_NEXT 2
+#define KEY_UP 3
+#define KEY_DOWN 4
+#define DISPLAY_PUFFER_ON_TIME 30000    //[ms]
+#define DISPLAY_REDRAW_TIME_MEASURE 1000        //Zeit, wann Display aktualisiert werden soll wenn Seite mit aktuellen Messdaten angezeigt [ms]
+#define DISPLAY_NUMBER_PAGES 6                  //Anzahl der Seiten
+#define DISPLAY_NUMBER_LINES_2 2                //Anzahl der möglichen bearbeitbaren Zeilen Seite 2
+#define DISPLAY_NUMBER_LINES_3 1                //Anzahl der möglichen bearbeitbaren Zeilen Seite 3
+#define DISPLAY_NUMBER_LINES_6 0                //Anzahl der möglichen bearbeitbaren Zeilen Seite 6
