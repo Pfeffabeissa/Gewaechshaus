@@ -19,6 +19,9 @@ void setAnalogSensorsPowerSupply(bool newState);
 void setMotorDriverPowerSupply(bool newState);
 
 float readBmeTemperature();
+float readBmeHumidity();
 float readNtcTemperature();
+float readSoilMoisture();
+
 void regulateRoofMotor(int speed);
 void regulatePump(int speed);

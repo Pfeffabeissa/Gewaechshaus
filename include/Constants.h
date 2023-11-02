@@ -6,7 +6,9 @@
 #define PIN_MOSFET_ANALOGS 43
 
 // Anschluss NTC
-#define PIN_NTC A1
+#define PIN_SENSOR_NTC A1
+// Anschluss Bodenfeuchtesensor
+#define PIN_SENSOR_SOIL_HUMIDITY A2
 
 
 
