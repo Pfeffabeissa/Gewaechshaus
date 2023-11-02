@@ -18,7 +18,7 @@ void arrayMeasure() {
     }
 
     if (isArrayMeasurePending && isArrayMeasureAllowed()) {
-        // Messungen hierher
+        executeArrayMeasures();
         setArrayMeasureRequests(false);
         isArrayMeasurePending = false;
     }
@@ -67,4 +67,47 @@ bool isArrayMeasureAllowed() {
     else {
         return false;
     }
+}
+
+// Führt Messungen aus, speichert die Werte bis zum gewünschten Zeitpunkt ab, und setzt den Durchschnittswert in die globalen Variablen
+void executeArrayMeasures() {
+    static uint8_t currentIndex = 0;
+    static uint8_t amountOfMeasurements = 0;
+    static float batteryVoltageValues[(int)AVERAGE_VALUE_INCLUDE_TIME/ARRAY_MEASURE_INTERVAL];
+    static float soilMoistureValues[(int)AVERAGE_VALUE_INCLUDE_TIME/ARRAY_MEASURE_INTERVAL];
+    static float temperatureOutsideValues[(int)AVERAGE_VALUE_INCLUDE_TIME/ARRAY_MEASURE_INTERVAL];
+    static float temperatureInsideValues[(int)AVERAGE_VALUE_INCLUDE_TIME/ARRAY_MEASURE_INTERVAL];
+    static float airHumidityValues[(int)AVERAGE_VALUE_INCLUDE_TIME/ARRAY_MEASURE_INTERVAL];
+
+    batteryVoltageValues[currentIndex] = readBatteryVoltage();
+    soilMoistureValues[currentIndex] = readSoilMoisture();
+    temperatureOutsideValues[currentIndex] = readNtcTemperature();
+    temperatureInsideValues[currentIndex] = readBmeTemperature();
+    airHumidityValues[currentIndex] = readBmeHumidity();
+
+    if (currentIndex == amountOfMeasurements) {
+        amountOfMeasurements++;
+    }
+
+    averageBatteryVoltage = average(batteryVoltageValues, amountOfMeasurements);
+    averageSoilMoisture = average(soilMoistureValues, amountOfMeasurements);
+    averageTemperatureOutside = average(temperatureOutsideValues, amountOfMeasurements);
+    averageTemperatureInside = average(temperatureInsideValues, amountOfMeasurements);
+    averageAirHumidity = average(airHumidityValues, amountOfMeasurements);
+
+    if (currentIndex >= (int)AVERAGE_VALUE_INCLUDE_TIME/ARRAY_MEASURE_INTERVAL - 1) {
+        currentIndex = 0;
+    }
+    else {
+        currentIndex++;
+    }
+}
+
+// Berechnet das arithmetische Mittel aus den ersten amoutOfMeasurements Werten im mitgegebenen Array
+float average(float array[], uint8_t amountOfMeasurements) {
+    float sum = 0;
+    for (int i = 0; i < amountOfMeasurements; i++) {
+        sum += array[i];
+    }
+    return sum/amountOfMeasurements;
 }
