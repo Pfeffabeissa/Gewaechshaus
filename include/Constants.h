@@ -8,8 +8,6 @@
 // Anschluss NTC
 #define PIN_NTC A1
 
-
-
 // Analoger Ausgang für Dachgeschwindigkeit
 #define PIN_ROOF_SPEED 12
 
@@ -28,6 +26,11 @@
 // Wartezeit bis zur ersten Motoraktion nach der ersten Stromversorgung des Motortreibers
 #define MOTOR_DRIVER_PUFFER_TIME 300
 
+// Zeitdauer, wie lange Messwerte aus der Vergangenheit für Durchschnittswerte miteinbezogen werden sollen
+#define AVERAGE_VALUE_INCLUDE_TIME 1800000
+
+// Zeitintervall zwischen Durchschnittsmessungen und tatsächlichen Messungen für Display
+#define ARRAY_MEASURE_INTERVAL 60000
 
 // Parameter Widerstände
 #define REFERENCE_VOLTAGE 5.04  //Versorgungsspannung Arduino

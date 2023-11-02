@@ -10,9 +10,20 @@ extern uint8_t stateMeasureAllowed;
 extern uint8_t stateMotorRequest;
 extern uint8_t stateMotorAllowed;
 
+extern float averageBatteryVoltage;
+extern float averageTemperatureOutside;
+extern float averageTemperatureInside;
+extern float averageSoilMoisture;
+extern float averageAirHumidity;
+
 void managePowerSupplies();
 void manageSensorPowerSupplies();
 void manageMotorPowerSupplies();
+
+void arrayMeasure();
+bool checkArrayMeasureSchedule();
+void setArrayMeasureRequests(bool isRequested);
+bool isArrayMeasureAllowed();
 
 void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);
