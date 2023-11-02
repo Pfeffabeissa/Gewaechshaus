@@ -48,6 +48,7 @@ void manageSensorPowerSupplies() {
     static uint8_t previousArrayMeasureRequest;
     static uint8_t previousDisplayMeasureRequest;
     static uint32_t analogSensorsTurnOnTime;
+    static bool hasRequests;
 
     if (previousArrayMeasureRequest != stateArrayMeasureRequest || previousDisplayMeasureRequest != stateDisplayMeasureRequest) {
         if (stateArrayMeasureRequest & 128 || stateDisplayMeasureRequest & 128) {
@@ -62,13 +63,20 @@ void manageSensorPowerSupplies() {
         else {
             stateMeasureAllowed &= ~64;
         }
+        if (stateArrayMeasureRequest & 1 || stateDisplayMeasureRequest & 1) {
+            stateMeasureAllowed |= 1;
+        }
+        else {
+            stateMeasureAllowed &= ~1;
+        }
         if (stateArrayMeasureRequest & 2 || stateDisplayMeasureRequest & 2 || stateArrayMeasureRequest & 4 || stateDisplayMeasureRequest & 4) {
+            hasRequests = true;
             setAnalogSensorsPowerSupply(true);
             analogSensorsTurnOnTime = millis();
         }
         else {
+            hasRequests = false;
             setAnalogSensorsPowerSupply(false);
-            analogSensorsTurnOnTime = -1;
         }
         previousArrayMeasureRequest = stateArrayMeasureRequest;
         previousDisplayMeasureRequest = stateDisplayMeasureRequest;
@@ -78,7 +86,7 @@ void manageSensorPowerSupplies() {
         stateMeasureAllowed |= 2;
         stateMeasureAllowed |= 4;
     }
-    else if (analogSensorsTurnOnTime == -1) {
+    else if (!hasRequests) {
         stateMeasureAllowed &= ~2;
         stateMeasureAllowed &= ~4;
     }
@@ -88,15 +96,17 @@ void manageSensorPowerSupplies() {
 void manageMotorPowerSupplies() {
     static uint8_t previousMotorRequest;
     static uint32_t motorDriverTurnOnTime;
+    static bool hasRequests;
 
     if (previousMotorRequest != stateMotorRequest) {
         if (stateMotorRequest & 1 || stateMotorRequest & 2) {
+            hasRequests = true;
             setMotorDriverPowerSupply(true);
             motorDriverTurnOnTime = millis();
         }
         else {
+            hasRequests = false;
             setMotorDriverPowerSupply(false);
-            motorDriverTurnOnTime = -1;
         }
         previousMotorRequest = stateMotorRequest;
     }
@@ -104,7 +114,7 @@ void manageMotorPowerSupplies() {
         stateMotorAllowed |= 1;
         stateMotorAllowed |= 2;
     }
-    else if (motorDriverTurnOnTime == -1) {
+    else if (!hasRequests) {
         stateMotorAllowed &= ~2;
         stateMotorAllowed &= ~4;
     }
