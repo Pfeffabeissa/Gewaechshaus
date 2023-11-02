@@ -16,6 +16,12 @@ extern float averageTemperatureInside;
 extern float averageSoilMoisture;
 extern float averageAirHumidity;
 
+extern float actualBatteryVoltage;
+extern float actualTemperatureOutside;
+extern float actualTemperatureInside;
+extern float actualSoilMoisture;
+extern float actualAirHumidity;
+
 void managePowerSupplies();
 void manageSensorPowerSupplies();
 void manageMotorPowerSupplies();
@@ -26,6 +32,9 @@ void setArrayMeasureRequests(bool isRequested);
 bool isArrayMeasureAllowed();
 void executeArrayMeasures();
 float average(float array[], uint8_t amountOfMeasurements);
+
+void actualMeasure();
+bool executeActualMeasures();
 
 void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);

@@ -8,6 +8,12 @@ float averageTemperatureInside;
 float averageSoilMoisture;
 float averageAirHumidity;
 
+float actualBatteryVoltage;
+float actualTemperatureOutside;
+float actualTemperatureInside;
+float actualSoilMoisture;
+float actualAirHumidity;
+
 // Ruft alle für Arraymessungen nötigen Funktionen auf
 void arrayMeasure() {
     static bool isArrayMeasurePending = false;
@@ -23,6 +29,18 @@ void arrayMeasure() {
         isArrayMeasurePending = false;
     }
 
+}
+
+// Ruft Messung solange auf, bis sie ausgeführt werden konnte
+void actualMeasure() {
+    static bool isActualMeasurePending = false;
+    if (!isActualMeasurePending && stateDisplayMeasureRequest > 0) {
+        isActualMeasurePending = true;
+    }
+    
+    if (isActualMeasurePending) {
+        if (executeActualMeasures()) isActualMeasurePending = false;
+    }
 }
 
 // Überprüft, ob das Arraymessungszeitintervall abgelafuen ist
@@ -101,6 +119,49 @@ void executeArrayMeasures() {
     else {
         currentIndex++;
     }
+}
+
+// Führt alle angeforderten tatsächlichen Messungen aus, returnt true wenn alle ausgeführt werden konnten
+bool executeActualMeasures() {
+    uint8_t counter = 0;
+    if (stateDisplayMeasureRequest & 1) {
+        if (stateMeasureAllowed & 1) {
+            actualBatteryVoltage = readBatteryVoltage();
+            counter++;
+        }
+    }
+    else counter++;
+    if (stateDisplayMeasureRequest & 2) {
+        if (stateMeasureAllowed & 2) {
+            actualTemperatureOutside = readNtcTemperature();
+           counter++;
+        }
+    }
+    else counter++;
+    if (stateDisplayMeasureRequest & 4) {
+        if (stateMeasureAllowed & 4) {
+            actualTemperatureInside = readBmeTemperature();
+            counter++;
+        }
+    }
+    else counter++;
+    if (stateDisplayMeasureRequest & 64) {
+        if (stateMeasureAllowed & 64) {
+            actualSoilMoisture = readSoilMoisture();
+            counter++;
+        }
+    }
+    else counter++;
+    if (stateDisplayMeasureRequest & 128) {
+        if (stateMeasureAllowed & 128) {
+            actualAirHumidity = readBmeHumidity();
+            counter++;
+        }
+    }
+    else counter++;
+
+    if (counter == 5) return true;
+    else return false;
 }
 
 // Berechnet das arithmetische Mittel aus den ersten amoutOfMeasurements Werten im mitgegebenen Array
