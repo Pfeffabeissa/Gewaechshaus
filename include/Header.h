@@ -22,6 +22,9 @@ extern float actualTemperatureInside;
 extern float actualSoilMoisture;
 extern float actualAirHumidity;
 
+extern uint8_t targetRoofPosition;
+extern uint8_t actualRoofPosition;
+
 void managePowerSupplies();
 void manageSensorPowerSupplies();
 void manageMotorPowerSupplies();
@@ -48,5 +51,7 @@ float readBatteryVoltage();
 bool readButton(int pin);
 bool readLimitSwitch(int pin);
 
+void manageMotors();
+void manageRoofMotor();
 void regulateRoofMotor(int speed);
 void regulatePump(int speed);
