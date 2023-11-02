@@ -39,7 +39,7 @@ void setAnalogSensorsPowerSupply(bool newState) {
 
 
 // Checkt Requests an Sensoren und erteilt Erlaubnis
-void managePowerSupplies() {
+void manageSensorPowerSupplies() {
     static uint8_t previousArrayMeasureRequest;
     static uint8_t previousDisplayMeasureRequest;
     static uint32_t analogSensorsTurnOnTime;

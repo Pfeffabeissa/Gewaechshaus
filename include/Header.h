@@ -8,7 +8,7 @@ extern uint8_t stateArrayMeasureRequest;
 extern uint8_t stateDisplayMeasureRequest;
 extern uint8_t stateMeasureAllowed;
 
-void managePowerSupplies();
+void manageSensorPowerSupplies();
 
 void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);
