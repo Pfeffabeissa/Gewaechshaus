@@ -25,6 +25,9 @@
 
 // Wartezeit bis zur ersten Messung der analogen Sensoren nach erster Stromversorgung
 #define ANALOG_SENSORS_PUFFER_TIME 300
+// Wartezeit bis zur ersten Motoraktion nach der ersten Stromversorgung des Motortreibers
+#define MOTOR_DRIVER_PUFFER_TIME 300
+
 
 // Parameter Widerstände
 #define REFERENCE_VOLTAGE 5.04  //Versorgungsspannung Arduino
