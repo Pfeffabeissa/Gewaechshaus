@@ -5,6 +5,14 @@
 // Mosfet Stromversorgung analoge Sensoren
 #define PIN_MOSFET_ANALOGS 43
 
+// Pins Buttons/Endlagenschalter
+#define UI_BUTTON_RIGHT 32
+#define UI_BUTTON_LEFT 30
+#define UI_BUTTON_TOP 26
+#define UI_BUTTON_BOTTOM 28
+#define ROOF_LIMIT_SWITCH_TOP 22
+#define ROOF_LIMIT_SWITCH_BOTTOM 24
+
 
 // Anschluss Spannungsmesser
 #define PIN_SENSOR_BATTERY_VOLTAGE A0
@@ -41,3 +49,5 @@
 #define NTC_RN   10000          //Widerstand NTC bei 25°
 #define NTC_TN   25             //Temperatur, bei welcher der Widerstand gemessen wurde (25°)
 #define NTC_B   3380            //Thermistorkonstante B von NTC
+
+

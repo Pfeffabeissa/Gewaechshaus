@@ -42,3 +42,27 @@ float readBatteryVoltage()
     auxiliaryVariable = (analogRead(PIN_SENSOR_BATTERY_VOLTAGE) * REFERENCE_VOLTAGE) / 1024;       
     return (auxiliaryVariable * (RESISTOR_R1 + RESISTOR_R2)) / RESISTOR_R2;           
 }
+
+// Funktion Taster lesen, return 1 wenn gedrückt
+boolean readButton(int pin)
+{
+    if(digitalRead(pin) == LOW)				    //Prüft ob Taster gedrückt
+	{
+	    delay(10);							    //Wenn 10ms vergangen && Taster noch gedrückt --> übergibt 1
+	    if(digitalRead(pin) == LOW) return 1;
+	    else return 0;    
+	}
+	else return 0;								//Wenn nicht gedrückt, übergibt 0
+}
+
+// Funktion Endlagenschalter Dach, return 1 wenn betätigt
+boolean readLimitSwitch(int pin)
+{
+    if(digitalRead(pin) == HIGH)				//Prüft ob Endlagenschalter betätigt ist
+	{
+		delay(10);							    //Wenn 10ms vergangen && Endlagenschalter immer noch betätigt --> übergibt 1
+		if(digitalRead(pin) == HIGH) return 1;
+		else return 0;    
+	}
+	else return 0;								//Wenn nicht betätigt, übergibt 0
+}
