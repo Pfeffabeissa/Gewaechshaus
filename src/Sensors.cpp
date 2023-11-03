@@ -37,9 +37,9 @@ float readBmeHumidity()
 // Funktion Temperatur außerhalb Gewächshaus
 float readNtcTemperature()
 {
-    float analogValue = (analogRead(PIN_SENSOR_NTC) / REFERENCE_VOLTAGE) * 1023;            // Einlesen der Spannung vom Spannungsteiler
-    float rNtc = (RESISTOR_R3 / REFERENCE_VOLTAGE) * analogValue;                           // Widerstand vom NTC
-    return (1 / ((log(rNtc/NTC_RN) / NTC_B) + 1 / (NTC_TN + 273.15)) - 273.15);             // Umrechnung von Rt = Rn * e hoch B*(1/T - 1/Tn)    
+    float analogValue = (analogRead(PIN_SENSOR_NTC) * REFERENCE_VOLTAGE) / 1023;            // Einlesen der Spannung vom Spannungsteiler
+    float rNtc = analogValue / (REFERENCE_VOLTAGE - analogValue) * RESISTOR_R3;             // Widerstand vom NTC
+    return (1 / ((log(rNtc/NTC_RN) / NTC_B) + 1 / (NTC_TN + 273.15))) - 273.15 -1.2;        // Offset miteinberechnet   
 }
 
 // Funktion Bodenfeuchte Gewächshaus 0 - 100%
