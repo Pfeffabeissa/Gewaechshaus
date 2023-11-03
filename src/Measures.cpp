@@ -43,18 +43,6 @@ void actualMeasure() {
     }
 }
 
-// Ruft Messung solange auf, bis sie ausgeführt werden konnte
-void actualMeasure() {
-    static bool isActualMeasurePending = false;
-    if (!isActualMeasurePending && stateDisplayMeasureRequest > 0) {
-        isActualMeasurePending = true;
-    }
-    
-    if (isActualMeasurePending) {
-        if (executeActualMeasures()) isActualMeasurePending = false;
-    }
-}
-
 // Überprüft, ob das Arraymessungszeitintervall abgelaufen ist
 bool checkArrayMeasureSchedule() {
     static uint8_t nextArrayMeasureTime = 0;

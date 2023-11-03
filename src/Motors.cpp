@@ -5,6 +5,7 @@
 // Ruft alle Funktionen für Motor und Pumpensteuerung auf
 void manageMotors() {
     manageRoofMotor();
+    managePump();
 }
 
 // Steuert Initialisierung, Start und Stopp der Dachbewegung
@@ -48,6 +49,32 @@ void manageRoofMotor() {
             regulateRoofMotor(0);
             actualRoofPosition = targetRoofPosition;
             isDriving = false;
+        }
+    }
+}
+
+// Steuert Ausführung des Beässerungszyklus bei manueller Anfrage
+void managePump() {
+    static bool isRunning = false;
+    static uint32_t cycleStartTime = 0;
+    if (!isRunning) {
+        if (isIrrigationRequired) {
+            isRunning = true;
+            cycleStartTime = millis();
+        }
+    }
+    else {
+        if  (millis() - cycleStartTime <= IRRIGATION_CYCLE_LENGTH) {
+            if (millis() - cycleStartTime <= IRRIGATION_CYCLE_LENGTH / 2) {
+                regulatePump((millis() - cycleStartTime) / (IRRIGATION_CYCLE_LENGTH / 2));
+            }
+            else {
+                regulatePump(100 - ((millis() - cycleStartTime) / IRRIGATION_CYCLE_LENGTH));
+            }
+        }
+        else {
+            regulatePump(0);
+            isRunning = false;
         }
     }
 }

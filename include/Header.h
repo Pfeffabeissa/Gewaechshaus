@@ -26,6 +26,7 @@ extern float actualAirHumidity;
 
 extern uint8_t targetRoofPosition;
 extern uint8_t actualRoofPosition;
+extern bool isIrrigationRequired;
 
 void managePowerSupplies();
 void manageSensorPowerSupplies();
@@ -55,6 +56,7 @@ bool readLimitSwitch(int pin);
 
 void manageMotors();
 void manageRoofMotor();
+void managePump();
 void regulateRoofMotor(int speed);
 void regulatePump(int speed);
 
