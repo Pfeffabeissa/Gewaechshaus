@@ -46,6 +46,9 @@
 // Zeitintervall zwischen Durchschnittsmessungen und tatsächlichen Messungen für Display
 #define ARRAY_MEASURE_INTERVAL 60000
 
+// Eine Periodenlänge des Bewässerungsvorgangs
+#define IRRIGATION_CYCLE_LENGTH 4000
+
 // Parameter Widerstände
 #define REFERENCE_VOLTAGE 5.04  //Versorgungsspannung Arduino
 #define RESISTOR_R1 82000       //Ohm

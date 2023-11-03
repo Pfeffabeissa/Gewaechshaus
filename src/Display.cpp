@@ -19,6 +19,7 @@ static uint8_t displaySettingState = 0;        // 1: Einstellung möglich, 2: Ei
 static bool displayIsOn = 0;
 static bool displayRedrawRequired = 0;
 
+static uint8_t temporaryTargetRoofPosition;
 
 
 // Funktion zum zusammenfügen aller Display-Unterfunktionen
@@ -252,4 +253,189 @@ void setSettings(void)
 void printDisplayPage(void)
 {
 
+// Führt den Schreibprozess auf das Display aus
+void printDisplayPage(void) {
+    u8g.firstPage();
+    switch(displayPage) {
+        case 0:
+            do {
+                
+            } while (u8g.nextPage());
+        
+        case 1:
+            do {
+                u8g.setFont(u8g_font_profont15);
+                u8g.setFontPosTop();
+                u8g.drawStr(3, 0, "TEMPERATUR");  //Temperatur
+                u8g.setPrintPos(13, 12);
+                u8g.print("Innen: ");
+                u8g.print(actualTemperatureInside);
+                u8g.write(0xb0);
+                u8g.print("C");
+                u8g.setPrintPos(13, 23);
+                u8g.print("Aussen: ");
+                u8g.print(actualTemperatureOutside);
+                u8g.write(0xb0);
+                u8g.print("C");
+
+                u8g.drawStr(3, 40, "LUFTFEUCHTIGKEIT");  //Luftfeuchtigkeit
+                u8g.setPrintPos(13, 52);
+                u8g.print("Innen: ");
+                u8g.print(actualAirHumidity);
+                u8g.print("%");
+            } while (u8g.nextPage());
+            break;
+        
+        case 2:
+            do {
+                u8g.setFont(u8g_font_profont15);
+                u8g.setFontPosTop();
+                u8g.drawStr(3, 0, "BODENFEUCHTIGKEIT");
+                u8g.drawStr(3, 43, "BEWAESSERUNG:");
+
+                u8g.setFont(u8g_font_profont12);
+                u8g.setFontPosTop();
+                u8g.setPrintPos(13, 12);
+                u8g.print("IST-WERT: ");
+                if (actualSoilMoisture >= 10) u8g.setPrintPos(88, 12);  //Wenn zwei Zahlen vorm Komma
+                else u8g.setPrintPos(94, 12);                           //Wenn eine Zahl vorm Komma
+                u8g.print(actualSoilMoisture);
+                u8g.print("%");
+                u8g.setPrintPos(13, 23);
+                u8g.print("SOLL-WERT: ");
+                if (displayLine == 1) {
+                    u8g.drawBox(85, 24, u8g.getStrWidth("60.00%") + 6, 10);
+                    u8g.setDefaultBackgroundColor();
+                    if (targetSoilMoisture >= 10) u8g.setPrintPos(88, 23);  //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(94, 23);                           //Wenn eine Zahl vorm Komma
+                    u8g.print(targetSoilMoisture);
+                    u8g.print("%");
+                    u8g.setDefaultForegroundColor();
+                }
+                else {
+                    if (targetSoilMoisture >= 10) u8g.setPrintPos(88, 23);  //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(94, 23);                           //Wenn eine Zahl vorm Komma
+                    u8g.print(targetSoilMoisture);
+                    u8g.print("%");
+                }
+                if (displayLine == 2) {
+                    u8g.drawBox(101, 44, u8g.getStrWidth("OFF") + 8, 14);
+                    u8g.setDefaultBackgroundColor();
+                    if (isPumpRunning)  //Wenn Pumpe an -> ON auf Display (Farbe negiert)
+                    {
+                    u8g.setPrintPos(108, 45);
+                    u8g.print("ON");
+                    } else  //Wenn Pumpe aus -> OFF auf Display (Farbe negiert)
+                    {
+                    u8g.setPrintPos(104, 45);
+                    u8g.print("OFF");
+                    }
+                    u8g.setDefaultForegroundColor();
+                } 
+                else {
+                    u8g.drawFrame(101, 44, u8g.getStrWidth("OFF") + 8, 14);
+                    if (isPumpRunning)  //Wenn Pumpe an -> ON auf Display (Farbe normal)
+                    {
+                    u8g.setPrintPos(108, 45);
+                    u8g.print("ON");
+                    } else  //Wenn Pumpe aus -> OFF auf Display (Farbe normal)
+                    {
+                    u8g.setPrintPos(104, 45);
+                    u8g.print("OFF");
+                    }
+                }
+            } while (u8g.nextPage());
+            break;
+        
+        case 3:
+            do {
+                u8g.setFont(u8g_font_profont15);
+                u8g.setFontPosTop();
+                u8g.drawStr(3, 0, "DACH");
+
+                u8g.setFont(u8g_font_profont12);
+                u8g.setFontPosTop();
+                u8g.setPrintPos(13, 12);
+                u8g.print("IST-WERT: ");
+                if (actualRoofPosition == 100) u8g.setPrintPos(88, 12);  //Wenn zwei Zahlen vorm Komma
+                else if (actualRoofPosition >= 10) u8g.setPrintPos(94, 12);
+                else u8g.setPrintPos(100, 12);  //Wenn eine Zahl vorm Komma
+                u8g.print(actualRoofPosition);
+                u8g.print("%");
+                u8g.setPrintPos(13, 23);
+                u8g.print("SOLL-WERT: ");
+
+                if (displayLine == 1) {
+                    u8g.drawBox(85, 24, u8g.getStrWidth("100%") + 6, 10);
+                    u8g.setDefaultBackgroundColor();
+                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);      //Wenn drei Zahlen vorm Komma
+                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);  //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(100, 23);                                         //Wenn eine Zahl vorm Komma
+                    u8g.print(temporaryTargetRoofPosition);
+                    u8g.print("%");
+                    u8g.setDefaultForegroundColor();
+                }
+                else {
+                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);      //Wenn zwei Zahlen vorm Komma
+                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);  //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(100, 23);                                         //Wenn eine Zahl vorm Komma
+                    if (temporaryTargetRoofPosition != 100) u8g.print(temporaryTargetRoofPosition);
+                    else u8g.print("100");
+                    u8g.print("%");
+                }
+            } while (u8g.nextPage());
+            break;
+
+        case 4:
+            do {
+                u8g.setFont(u8g_font_profont15);
+                u8g.setFontPosTop();
+                u8g.drawStr(3, 0, "PROZESSDATEN");
+                u8g.setPrintPos(13, 12);
+                u8g.print("Spannung: ");
+                u8g.print(actualBatteryVoltage);
+                u8g.print("V");
+                u8g.setPrintPos(13, 23);
+            } while (u8g.nextPage());
+            break;
+
+        case 5:
+            do {
+                u8g.setFont(u8g_font_profont15);
+                u8g.setFontPosTop();
+                u8g.drawStr(3, 0, "MITTELWERTE 30 Minuten");
+                u8g.setFont(u8g_font_profont12);
+                u8g.setPrintPos(10, 22);
+                u8g.print("Spannung: ");
+                u8g.print(averageBatteryVoltage);
+                u8g.print("V");
+                u8g.setPrintPos(10, 32);
+                u8g.print("Temp. A: ");
+                u8g.print(averageTemperatureOutside);
+                u8g.print(0xb0);
+                u8g.print("C");
+                u8g.setPrintPos(10, 23);
+                u8g.print("Temp. innen: ");
+                u8g.print(averageTemperatureInside);
+                u8g.print(0xb0);
+                u8g.print("C");
+                u8g.setPrintPos(10, 42);
+                u8g.print("Bodenfeuchte: ");
+                u8g.print(averageSoilMoisture);
+                u8g.print("%");
+                u8g.setPrintPos(10, 52);
+                u8g.print("Luftfeuchte: ");
+                u8g.print(averageAirHumidity);
+                u8g.print("%");
+            } while (u8g.nextPage());
+            break;
+
+        case 6:
+            do {
+                u8g.setFont(u8g_font_profont15);
+                u8g.setFontPosTop();
+                u8g.drawStr(3, 0, "EINSTELLUNGEN");
+            } while (u8g.nextPage());
+            break;
+    }
 }
