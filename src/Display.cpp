@@ -6,6 +6,7 @@
 
 U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);	// I2C / TWI 
 
+float targetSoilMoisture;
 
 static uint32_t lastTimeButtonPressed = 0;    //Zeit vom letzten Tastendruck
 static uint32_t nextTimeMeasureRedrawed = 0;
@@ -21,6 +22,9 @@ static bool displayRedrawRequired = 0;
 
 static uint8_t temporaryTargetRoofPosition = 0;
 
+void initializeDisplay() {
+    u8g.begin();
+}
 
 // Funktion zum zusammenfügen aller Display-Unterfunktionen
 void manageDisplayfunctions(void)

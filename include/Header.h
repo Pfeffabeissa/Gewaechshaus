@@ -29,7 +29,7 @@ extern float targetSoilMoisture;
 extern uint8_t targetRoofPosition;
 extern uint8_t actualRoofPosition;
 extern bool isIrrigationRequired;
-static bool isPumpRunning;
+extern bool isPumpRunning;
 
 void managePowerSupplies();
 void manageSensorPowerSupplies();
@@ -49,6 +49,7 @@ void setSystemPowerSupply(bool newState);
 void setAnalogSensorsPowerSupply(bool newState);
 void setMotorDriverPowerSupply(bool newState);
 
+void initializeBme();
 float readBmeTemperature();
 float readBmeHumidity();
 float readNtcTemperature();
@@ -64,6 +65,7 @@ void managePump();
 void regulateRoofMotor(int speed);
 void regulatePump(int speed);
 
+void initializeDisplay();
 void manageDisplayfunctions();
 void switchDisplayOnOff();
 void checkDisplayUserInput();

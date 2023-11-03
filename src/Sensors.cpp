@@ -6,6 +6,10 @@
 
 BME280I2C bme;
 
+void initializeBme() {
+    bme.begin();
+}
+
 // Funktion Temperatur
 float readBmeTemperature()
 {

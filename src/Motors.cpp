@@ -2,6 +2,13 @@
 #include <Header.h>
 #include <Arduino.h>
 
+uint8_t targetRoofPosition;
+uint8_t actualRoofPosition;
+uint8_t stateMotorRequest;
+uint8_t stateMotorAllowed;
+bool isPumpRunning;
+bool isIrrigationRequired;
+
 // Ruft alle Funktionen für Motor und Pumpensteuerung auf
 void manageMotors() {
     manageRoofMotor();
