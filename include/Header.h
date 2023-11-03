@@ -67,4 +67,6 @@ void manageDisplayfunctions();
 void switchDisplayOnOff();
 void checkDisplayUserInput();
 void setDisplayParameters();
+void setRewdrawDisplayMeasure();
+void setSettings();
 void printDisplayPage();

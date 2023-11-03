@@ -19,7 +19,7 @@ static uint8_t displaySettingState = 0;        // 1: Einstellung möglich, 2: Ei
 static bool displayIsOn = 0;
 static bool displayRedrawRequired = 0;
 
-static uint8_t temporaryTargetRoofPosition;
+static uint8_t temporaryTargetRoofPosition = 0;
 
 
 // Funktion zum zusammenfügen aller Display-Unterfunktionen
@@ -30,29 +30,17 @@ void manageDisplayfunctions(void)
     if(displayIsOn)
     {
         checkDisplayUserInput();
-
-        //Wenn 0, keine Tasteränderung im letzten Programmdurchlauf
+        setRewdrawDisplayMeasure();
+        
+        //Wenn uiKeyCode == 0, keine Tasteränderung im letzten Programmdurchlauf
         if(uiKeyCode)
         {
-
+            setDisplayParameters();
+            setSettings();
         }
 
-        switch(displayPage)
-        {
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
-            case 5:
-                break;
-            case 6:
-                break;
-        }
-
+        if(displayRedrawRequired)
+            printDisplayPage();
     }
 }
 
@@ -77,7 +65,10 @@ void switchDisplayOnOff(void)
     {
         displayIsOn = false;
         lastTimeButtonPressed = 0;
-        //printDisplayPage auf 0 (ausschalten)
+        nextTimeMeasureRedrawed = 0;
+        displayPage = 0;
+        printDisplayPage();         //um Display auszuschalten
+
     }
 }
 
@@ -104,7 +95,7 @@ void checkDisplayUserInput()
 }
 
 
-//Seiten- und Zeilenparameter, Messbits für DisplayMeasure setzen
+// Seiten- und Zeilenparameter, Messbits für DisplayMeasure setzen
 void setDisplayParameters(void)
 {
     switch(uiKeyCode)
@@ -190,7 +181,7 @@ void setDisplayParameters(void)
 }
 
 
-//Abhängig von aktueller Zeit wird displayRedrawRequired gesetzt
+// Abhängig von aktueller Zeit wird displayRedrawRequired gesetzt
 void setRewdrawDisplayMeasure(void) 
 {
     if(stateDisplayMeasureRequest && (millis() >= nextTimeMeasureRedrawed))
@@ -201,6 +192,8 @@ void setRewdrawDisplayMeasure(void)
 
 }
 
+
+// Abhängig von displaySettingState werden Werte bearbeitet
 void setSettings(void)
 {
     switch(displayPage)
@@ -210,32 +203,32 @@ void setSettings(void)
 
         case 2:   //Seite 2
           if(displayLine == 1)
-            soilHumidityTarget = poti(0, 65);
+            targetSoilMoisture = readPoti(0, 65);
           
-          if((displayLine == 2) && (dataSensorAktor & 256) && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))     //Wenn Pumpe an 
+          if((displayLine == 2) && isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))     //Wenn Pumpe an 
           {
-            dataSensorAktor = dataSensorAktor & ~256;   //Pumpe ausschalten
+            isIrrigationRequired = false;   //Pumpe ausschalten
           }
-          else if((displayLine == 2) && !(dataSensorAktor & 256) && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))   //Wenn Pumpe aus
+          else if((displayLine == 2) && !isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))   //Wenn Pumpe aus
               {
-                dataSensorAktor = dataSensorAktor | 256;   //Pumpe einschalten
+                isIrrigationRequired = true;   //Pumpe einschalten
               }  
           
-          redraw_required = 1;
+          displayRedrawRequired = 1;
           break;
 
         case 3:   //Seite 3
           if(displayLine == 1)
           {
-            target_roofPositionTemporary = poti(0, 100);
-            if(settingsOn == 2)
+            temporaryTargetRoofPosition = readPoti(0, 100);
+            if(displaySettingState == 2)
             {  
-              target_roofPosition = target_roofPositionTemporary;
-              settingsOn = 1;
+              targetRoofPosition = temporaryTargetRoofPosition;
+              displaySettingState = 1;
             }
           }
 
-          redraw_required = 1;  
+          displayRedrawRequired = 1;  
           break;
 
         case 4:
@@ -250,8 +243,6 @@ void setSettings(void)
     }
 }
 
-void printDisplayPage(void)
-{
 
 // Führt den Schreibprozess auf das Display aus
 void printDisplayPage(void) {
