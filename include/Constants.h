@@ -12,6 +12,7 @@
 #define PIN_UI_BUTTON_BOTTOM 28
 #define PIN_ROOF_TOP_LIMIT_SWITCH 22
 #define PIN_ROOF_BOTTOM_LIMIT_SWITCH 24
+#define PIN_POTI A3
 
 
 // Anschluss Spannungsmesser
