@@ -23,7 +23,7 @@ void setup() {
     pinMode(PIN_PUMP_CONTROL, OUTPUT);
     pinMode(PIN_PUMP_SPEED, OUTPUT);
 
-    digitalWrite(PIN_MOSFET_SYSTEM_POWER, HIGH);  //Wird gebraucht, da Spannung noch nicht gleich gemessen
+    digitalWrite(PIN_MOSFET_SYSTEM_POWER, LOW);  //Wird gebraucht, da Spannung noch nicht gleich gemessen
     delay(300);
     Wire.begin();
     initializeBme();
