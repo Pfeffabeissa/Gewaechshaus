@@ -35,7 +35,7 @@ void arrayMeasure() {
 void actualMeasure() {
     static bool isActualMeasurePending = false;
 
-    if (checkActualMeasureSchedule && !isActualMeasurePending && stateDisplayMeasureRequest > 0) {
+    if (checkActualMeasureSchedule() && !isActualMeasurePending && stateDisplayMeasureRequest > 0) {
         isActualMeasurePending = true;
     }
     
