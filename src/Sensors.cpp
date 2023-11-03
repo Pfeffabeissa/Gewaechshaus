@@ -66,3 +66,8 @@ boolean readLimitSwitch(int pin)
 	}
 	else return 0;								//Wenn nicht betätigt, übergibt 0
 }
+
+// Lest den Poti aus und ordnet die Werte im Interval [min, max] ein
+int readPoti(int pin, int min, int max) {
+    return map(analogRead(pin), 0, 1020, min, max);
+}
