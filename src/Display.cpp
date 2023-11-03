@@ -8,6 +8,7 @@ U8GLIB_SH1106_128X64 u8g(U8G_I2C_OPT_NONE);	// I2C / TWI
 
 
 static uint32_t lastTimeButtonPressed = 0;    //Zeit vom letzten Tastendruck
+static uint32_t nextTimeMeasureRedrawed = 0;
 static uint8_t displayPage = 0;
 static uint8_t displayLine = 0;
 static uint8_t uiKeyCode;
@@ -53,6 +54,7 @@ void manageDisplayfunctions(void)
 
     }
 }
+
 
 // Schaltet Display ein und aus
 void switchDisplayOnOff(void)
@@ -101,6 +103,7 @@ void checkDisplayUserInput()
 }
 
 
+//Seiten- und Zeilenparameter, Messbits für DisplayMeasure setzen
 void setDisplayParameters(void)
 {
     switch(uiKeyCode)
@@ -112,21 +115,139 @@ void setDisplayParameters(void)
             displaySettingState = 0;
             displayRedrawRequired = true;
             break;
+
         case KEY_ENTER:
             if(displaySettingState == 0) displaySettingState = 1;
             else displaySettingState = 2;
-            break;
-        case KEY_DOWN:
-            displayLine++;
-            //hier gehts morgen weiter
-            break;
-        case KEY_UP:
-            displayLine--;
+            displayRedrawRequired = true;
             break;
 
+        case KEY_DOWN:
+            if(displaySettingState) 
+                break;
+            displayLine++;
+            if(displayPage == 2 && displayLine > DISPLAY_NUMBER_LINES_2)
+                displayLine = 1;
+            if (displayPage == 3 && displayLine > DISPLAY_NUMBER_LINES_3)
+                displayLine = 1;
+            if(displayPage == 6 && displayLine > DISPLAY_NUMBER_LINES_6)
+                displayLine = 1;
+            displayRedrawRequired = true;
+            break;
+
+        case KEY_UP:
+            if(displaySettingState)
+                break;
+            displayLine--;
+            if(displayPage == 2 && displayLine == 0)
+                displayLine = DISPLAY_NUMBER_LINES_2;
+            if(displayPage == 3 && displayLine == 0)
+                displayLine = DISPLAY_NUMBER_LINES_3;
+            if(displayPage == 6 && displayLine == 0)
+                displayLine = DISPLAY_NUMBER_LINES_6;  
+            displayRedrawRequired = true;              
+            break;
+    }
+
+    switch(displayPage)
+    {   
+        case 0:
+            stateDisplayMeasureRequest = 0;
+            break;
+
+        case 1:
+            stateDisplayMeasureRequest = 0;
+            stateDisplayMeasureRequest |= 4;
+            stateDisplayMeasureRequest |= 64;
+            nextTimeMeasureRedrawed = millis() + DISPLAY_REDRAW_TIME_MEASURE;
+            break;
+    
+        case 2:
+            stateDisplayMeasureRequest = 0;
+            stateDisplayMeasureRequest |= 2;
+            nextTimeMeasureRedrawed = millis() + DISPLAY_REDRAW_TIME_MEASURE;
+            break;
+        
+        case 3:
+            stateDisplayMeasureRequest = 0;
+            break;
+        
+        case 4:
+            stateDisplayMeasureRequest = 0;
+            stateDisplayMeasureRequest |= 1;
+            nextTimeMeasureRedrawed = millis() + DISPLAY_REDRAW_TIME_MEASURE;
+            break;
+        
+        case 5: 
+            stateDisplayMeasureRequest = 0;
+            break;
+        
+        case 6:
+            stateDisplayMeasureRequest = 0;
+            break;
     }
 }
 
+
+//Abhängig von aktueller Zeit wird displayRedrawRequired gesetzt
+void setRewdrawDisplayMeasure(void) 
+{
+    if(stateDisplayMeasureRequest && (millis() >= nextTimeMeasureRedrawed))
+    {
+        displayRedrawRequired = true;
+        nextTimeMeasureRedrawed += DISPLAY_REDRAW_TIME_MEASURE;
+    }
+
+}
+
+void setSettings(void)
+{
+    switch(displayPage)
+    {
+        case 1:   //Seite 1
+          break;
+
+        case 2:   //Seite 2
+          if(displayLine == 1)
+            soilHumidityTarget = poti(0, 65);
+          
+          if((displayLine == 2) && (dataSensorAktor & 256) && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))     //Wenn Pumpe an 
+          {
+            dataSensorAktor = dataSensorAktor & ~256;   //Pumpe ausschalten
+          }
+          else if((displayLine == 2) && !(dataSensorAktor & 256) && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))   //Wenn Pumpe aus
+              {
+                dataSensorAktor = dataSensorAktor | 256;   //Pumpe einschalten
+              }  
+          
+          redraw_required = 1;
+          break;
+
+        case 3:   //Seite 3
+          if(displayLine == 1)
+          {
+            target_roofPositionTemporary = poti(0, 100);
+            if(settingsOn == 2)
+            {  
+              target_roofPosition = target_roofPositionTemporary;
+              settingsOn = 1;
+            }
+          }
+
+          redraw_required = 1;  
+          break;
+
+        case 4:
+          break;
+        
+        case 5:
+          break;
+
+        case 6:
+          //NOCH FERTIG MACHEN
+          break;
+    }
+}
 
 void printDisplayPage(void)
 {
