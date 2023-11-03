@@ -39,7 +39,10 @@ void actualMeasure() {
     }
     
     if (isActualMeasurePending) {
-        if (executeActualMeasures()) isActualMeasurePending = false;
+        
+        if (executeActualMeasures()) { 
+            isActualMeasurePending = false;
+        }
     }
 }
 
@@ -154,6 +157,7 @@ bool executeActualMeasures() {
     else counter++;
     if (stateDisplayMeasureRequest & 128) {
         if (stateMeasureAllowed & 128) {
+            Serial.println("feuchtigkeit");
             actualAirHumidity = readBmeHumidity();
             counter++;
         }

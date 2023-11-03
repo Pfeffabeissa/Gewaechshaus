@@ -28,6 +28,7 @@ void setup() {
     Wire.begin();
     initializeBme();
     initializeDisplay();
+    Serial.begin(9600);
 }
 
 void loop() {

@@ -44,7 +44,10 @@ void manageDisplayfunctions(void)
         }
 
         if(displayRedrawRequired)
+        {  
             printDisplayPage();
+            displayRedrawRequired = false;
+        }
     }
 }
 
@@ -71,6 +74,7 @@ void switchDisplayOnOff(void)
         lastTimeButtonPressed = 0;
         nextTimeMeasureRedrawed = 0;
         displayPage = 0;
+        displayRedrawRequired = false;
         printDisplayPage();         //um Display auszuschalten
 
     }
@@ -153,14 +157,15 @@ void setDisplayParameters(void)
 
         case 1:
             stateDisplayMeasureRequest = 0;
-            stateDisplayMeasureRequest |= 4;
-            stateDisplayMeasureRequest |= 64;
+            stateDisplayMeasureRequest |= 4;    // TempOut
+            stateDisplayMeasureRequest |= 64;   // TempIn
+            stateDisplayMeasureRequest |= 128;  // Luftfeuchtigkeit
             nextTimeMeasureRedrawed = millis() + DISPLAY_REDRAW_TIME_MEASURE;
             break;
     
         case 2:
             stateDisplayMeasureRequest = 0;
-            stateDisplayMeasureRequest |= 2;
+            stateDisplayMeasureRequest |= 2;    // Bodenfeuchte
             nextTimeMeasureRedrawed = millis() + DISPLAY_REDRAW_TIME_MEASURE;
             break;
         
@@ -170,7 +175,7 @@ void setDisplayParameters(void)
         
         case 4:
             stateDisplayMeasureRequest = 0;
-            stateDisplayMeasureRequest |= 1;
+            stateDisplayMeasureRequest |= 1;    //Spannung
             nextTimeMeasureRedrawed = millis() + DISPLAY_REDRAW_TIME_MEASURE;
             break;
         
