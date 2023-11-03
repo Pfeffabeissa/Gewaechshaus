@@ -63,6 +63,7 @@ void switchDisplayOnOff(void)
         displayPage = 1;
         displayLine = 0;
         displaySettingState = 0;
+        displayRedrawRequired = true;
         uiKeyCodeFirst = KEY_NONE;
         uiKeyCodeLast = KEY_ENTER;         //da sonst direkt in checkDisplayUserInput KEY_ENTER gesetzt wird
         uiKeyCode = KEY_NONE;
@@ -119,8 +120,8 @@ void setDisplayParameters(void)
             break;
 
         case KEY_ENTER:
-            if(displaySettingState == 0) displaySettingState = 1;
-            else displaySettingState = 2;
+            if(displaySettingState == 0 && !displayLine) displaySettingState = 1;
+            else if(displaySettingState == 1) displaySettingState = 2;
             displayRedrawRequired = true;
             break;
 
@@ -132,8 +133,8 @@ void setDisplayParameters(void)
                 displayLine = 1;
             if (displayPage == 3 && displayLine > DISPLAY_NUMBER_LINES_3)
                 displayLine = 1;
-            if(displayPage == 6 && displayLine > DISPLAY_NUMBER_LINES_6)
-                displayLine = 1;
+            // if(displayPage == 6 && displayLine > DISPLAY_NUMBER_LINES_6)
+            //     displayLine = 1;
             displayRedrawRequired = true;
             break;
 
@@ -145,8 +146,8 @@ void setDisplayParameters(void)
                 displayLine = DISPLAY_NUMBER_LINES_2;
             if(displayPage == 3 && displayLine == 0)
                 displayLine = DISPLAY_NUMBER_LINES_3;
-            if(displayPage == 6 && displayLine == 0)
-                displayLine = DISPLAY_NUMBER_LINES_6;  
+            // if(displayPage == 6 && displayLine == 0)
+            //     displayLine = DISPLAY_NUMBER_LINES_6;  
             displayRedrawRequired = true;              
             break;
     }
@@ -213,17 +214,17 @@ void setSettings(void)
           break;
 
         case 2:   //Seite 2
-          if(displayLine == 1)
+            if(displayLine == 1)
             targetSoilMoisture = readPoti(0, 65);
           
-          if((displayLine == 2) && isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))     //Wenn Pumpe an 
-          {
-            isIrrigationRequired = false;   //Pumpe ausschalten
-          }
-          else if((displayLine == 2) && !isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))   //Wenn Pumpe aus
-              {
+            if((displayLine == 2) && isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))     //Wenn Pumpe an 
+            {
+                isIrrigationRequired = false;   //Pumpe ausschalten
+            }
+            else if((displayLine == 2) && !isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))   //Wenn Pumpe aus
+            {
                 isIrrigationRequired = true;   //Pumpe einschalten
-              }  
+            }  
           
           displayRedrawRequired = 1;
           break;
