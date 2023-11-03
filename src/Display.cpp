@@ -74,7 +74,9 @@ void switchDisplayOnOff(void)
         lastTimeButtonPressed = 0;
         nextTimeMeasureRedrawed = 0;
         displayPage = 0;
+        stateDisplayMeasureRequest = 0;
         displayRedrawRequired = false;
+
         printDisplayPage();         //um Display auszuschalten
 
     }
