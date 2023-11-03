@@ -56,6 +56,7 @@ float readSoilMoisture();
 float readBatteryVoltage();
 bool readButton(int pin);
 bool readLimitSwitch(int pin);
+int readPoti(int pin, int min, int max);
 
 void manageMotors();
 void manageRoofMotor();
