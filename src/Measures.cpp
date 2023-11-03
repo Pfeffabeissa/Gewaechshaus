@@ -34,12 +34,12 @@ void arrayMeasure() {
 // Ruft Messung solange auf, bis sie ausgeführt werden konnte
 void actualMeasure() {
     static bool isActualMeasurePending = false;
-    if (!isActualMeasurePending && stateDisplayMeasureRequest > 0) {
+
+    if (checkActualMeasureSchedule && !isActualMeasurePending && stateDisplayMeasureRequest > 0) {
         isActualMeasurePending = true;
     }
     
     if (isActualMeasurePending) {
-        
         if (executeActualMeasures()) { 
             isActualMeasurePending = false;
         }
@@ -51,6 +51,18 @@ bool checkArrayMeasureSchedule() {
     static uint8_t nextArrayMeasureTime = 0;
     if (millis() >= nextArrayMeasureTime) {
         nextArrayMeasureTime += ARRAY_MEASURE_INTERVAL;
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+// Überprüft, ob das tatsächliche Messungszeitintervall abgelaufen ist
+bool checkActualMeasureSchedule() {
+    static uint8_t nextActualMeasureTime = 0;
+    if (millis() >= nextActualMeasureTime) {
+        nextActualMeasureTime += ACTUAL_MEASURE_INTERVAL;
         return true;
     }
     else {

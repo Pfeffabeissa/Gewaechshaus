@@ -43,6 +43,7 @@ void executeArrayMeasures();
 float average(float array[], uint8_t amountOfMeasurements);
 
 void actualMeasure();
+bool checkActualMeasureSchedule();
 bool executeActualMeasures();
 
 void setSystemPowerSupply(bool newState);

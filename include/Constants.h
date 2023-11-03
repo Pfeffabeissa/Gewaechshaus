@@ -46,6 +46,7 @@
 
 // Zeitintervall zwischen Durchschnittsmessungen und tatsächlichen Messungen für Display
 #define ARRAY_MEASURE_INTERVAL 60000
+#define ACTUAL_MEASURE_INTERVAL 1000
 
 // Eine Periodenlänge des Bewässerungsvorgangs
 #define IRRIGATION_CYCLE_LENGTH 4000
