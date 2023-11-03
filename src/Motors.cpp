@@ -55,11 +55,10 @@ void manageRoofMotor() {
 
 // Steuert Ausführung des Beässerungszyklus bei manueller Anfrage
 void managePump() {
-    static bool isRunning = false;
     static uint32_t cycleStartTime = 0;
-    if (!isRunning) {
+    if (!isPumpRunning) {
         if (isIrrigationRequired) {
-            isRunning = true;
+            isPumpRunning = true;
             cycleStartTime = millis();
         }
     }
@@ -74,7 +73,7 @@ void managePump() {
         }
         else {
             regulatePump(0);
-            isRunning = false;
+            isPumpRunning = false;
         }
     }
 }
