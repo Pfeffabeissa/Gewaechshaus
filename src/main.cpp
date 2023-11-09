@@ -33,8 +33,8 @@ void setup() {
 
 void loop() {
     manageDisplayfunctions();
-    arrayMeasure();
-    actualMeasure();
-    manageMotors();
-    managePowerSupplies();
+    // arrayMeasure();
+    // actualMeasure();
+    // manageMotors();
+    // managePowerSupplies();
 }
