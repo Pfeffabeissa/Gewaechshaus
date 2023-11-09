@@ -22,8 +22,12 @@ static bool displayRedrawRequired = 0;
 
 static uint8_t temporaryTargetRoofPosition = 0;
 
+//Initialisiert Display und schaltet Bildschirm auf schwarz
 void initializeDisplay() {
     u8g.begin();
+    // u8g.firstPage();
+    // do {} while (u8g.nextPage());
+
 }
 
 // Funktion zum zusammenfügen aller Display-Unterfunktionen
@@ -128,6 +132,7 @@ void setDisplayParameters(void)
         case KEY_DOWN:
             if(displaySettingState) 
                 break;
+            Serial.println("KEY DOWN");
             displayLine++;
             if(displayPage == 2 && displayLine > DISPLAY_NUMBER_LINES_2)
                 displayLine = 1;
@@ -141,10 +146,11 @@ void setDisplayParameters(void)
         case KEY_UP:
             if(displaySettingState)
                 break;
+            Serial.println("KEY UP");
             displayLine--;
-            if(displayPage == 2 && displayLine == 0)
+            if(displayPage == 2 && displayLine <= 0)
                 displayLine = DISPLAY_NUMBER_LINES_2;
-            if(displayPage == 3 && displayLine == 0)
+            if(displayPage == 3 && displayLine <= 0)
                 displayLine = DISPLAY_NUMBER_LINES_3;
             // if(displayPage == 6 && displayLine == 0)
             //     displayLine = DISPLAY_NUMBER_LINES_6;  
@@ -205,7 +211,7 @@ void setRewdrawDisplayMeasure(void)
 }
 
 
-// Abhängig von displaySettingState werden Werte bearbeitet
+// Abhängig von displaySettingState können Werte bearbeitet
 void setSettings(void)
 {
     switch(displayPage)
@@ -371,17 +377,17 @@ void printDisplayPage(void) {
                 if (displayLine == 1) {
                     u8g.drawBox(85, 24, u8g.getStrWidth("100%") + 6, 10);
                     u8g.setDefaultBackgroundColor();
-                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);      //Wenn drei Zahlen vorm Komma
-                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);  //Wenn zwei Zahlen vorm Komma
-                    else u8g.setPrintPos(100, 23);                                         //Wenn eine Zahl vorm Komma
+                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);        //Wenn drei Zahlen vorm Komma
+                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);    //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(100, 23);                                          //Wenn eine Zahl vorm Komma
                     u8g.print(temporaryTargetRoofPosition);
                     u8g.print("%");
                     u8g.setDefaultForegroundColor();
                 }
                 else {
-                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);      //Wenn zwei Zahlen vorm Komma
-                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);  //Wenn zwei Zahlen vorm Komma
-                    else u8g.setPrintPos(100, 23);                                         //Wenn eine Zahl vorm Komma
+                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);        //Wenn zwei Zahlen vorm Komma
+                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);    //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(100, 23);                                          //Wenn eine Zahl vorm Komma
                     if (temporaryTargetRoofPosition != 100) u8g.print(temporaryTargetRoofPosition);
                     else u8g.print("100");
                     u8g.print("%");
