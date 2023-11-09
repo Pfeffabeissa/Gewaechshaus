@@ -8,8 +8,8 @@
 // Pins Buttons/Endlagenschalter
 #define PIN_UI_BUTTON_RIGHT 32
 #define PIN_UI_BUTTON_LEFT 30
-#define PIN_UI_BUTTON_TOP 26
-#define PIN_UI_BUTTON_BOTTOM 28
+#define PIN_UI_BUTTON_TOP 28
+#define PIN_UI_BUTTON_BOTTOM 26
 #define PIN_ROOF_TOP_LIMIT_SWITCH 22
 #define PIN_ROOF_BOTTOM_LIMIT_SWITCH 24
 #define PIN_POTI A3
@@ -67,7 +67,7 @@
 #define KEY_NEXT 2
 #define KEY_UP 3
 #define KEY_DOWN 4
-#define DISPLAY_PUFFER_ON_TIME 30000    //[ms]
+#define DISPLAY_PUFFER_ON_TIME 10000            //[ms]
 #define DISPLAY_REDRAW_TIME_MEASURE 1000        //Zeit, wann Display aktualisiert werden soll wenn Seite mit aktuellen Messdaten angezeigt [ms]
 #define DISPLAY_NUMBER_PAGES 6                  //Anzahl der Seiten
 #define DISPLAY_NUMBER_LINES_2 2                //Anzahl der möglichen bearbeitbaren Zeilen Seite 2
