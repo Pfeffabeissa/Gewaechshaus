@@ -146,11 +146,10 @@ void setDisplayParameters(void)
         case KEY_UP:
             if(displaySettingState)
                 break;
-            Serial.println("KEY UP");
-            displayLine--;
-            if(displayPage == 2 && displayLine <= 0)
+            if(displayLine != 0) displayLine--;             //Beim ersten Drücken auf jeweiliger Seite würde displayLine 255 werden -> anschließende if-Bedingung unzutreffend
+            if(displayPage == 2 && displayLine < 1)
                 displayLine = DISPLAY_NUMBER_LINES_2;
-            if(displayPage == 3 && displayLine <= 0)
+            if(displayPage == 3 && displayLine < 1)
                 displayLine = DISPLAY_NUMBER_LINES_3;
             // if(displayPage == 6 && displayLine == 0)
             //     displayLine = DISPLAY_NUMBER_LINES_6;  
