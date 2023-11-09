@@ -20,6 +20,8 @@ static uint8_t displaySettingState = 0;        // 1: Einstellung möglich, 2: Ei
 static bool displayIsOn = 0;
 static bool displayRedrawRequired = 0;
 
+
+static float temporaryTargetSoilMoisture = 0;
 static uint8_t temporaryTargetRoofPosition = 0;
 
 //Initialisiert Display und schaltet Bildschirm auf schwarz
@@ -39,6 +41,8 @@ void manageDisplayfunctions(void)
     {
         checkDisplayUserInput();
         setRewdrawDisplayMeasure();
+        if(displaySettingState == 1)    
+            setSettings();              // Um Display und Werte zu aktualisieren, wenn über Poti neue Werte eingestellt werden
         
         //Wenn uiKeyCode == 0, keine Tasteränderung im letzten Programmdurchlauf
         if(uiKeyCode)
@@ -124,16 +128,16 @@ void setDisplayParameters(void)
             break;
 
         case KEY_ENTER:
-            if(displaySettingState == 0 && !displayLine) displaySettingState = 1;
-            else if(displaySettingState == 1) displaySettingState = 2;
+            if(displaySettingState == 0 && displayLine) displaySettingState = 1;
+            else if(displaySettingState == 1) displaySettingState = 2;               
             displayRedrawRequired = true;
             break;
 
         case KEY_DOWN:
             if(displaySettingState) 
                 break;
-            Serial.println("KEY DOWN");
             displayLine++;
+            displaySettingState = 0;
             if(displayPage == 2 && displayLine > DISPLAY_NUMBER_LINES_2)
                 displayLine = 1;
             if (displayPage == 3 && displayLine > DISPLAY_NUMBER_LINES_3)
@@ -147,6 +151,7 @@ void setDisplayParameters(void)
             if(displaySettingState)
                 break;
             if(displayLine != 0) displayLine--;             //Beim ersten Drücken auf jeweiliger Seite würde displayLine 255 werden -> anschließende if-Bedingung unzutreffend
+            displaySettingState = 0;
             if(displayPage == 2 && displayLine < 1)
                 displayLine = DISPLAY_NUMBER_LINES_2;
             if(displayPage == 3 && displayLine < 1)
@@ -200,12 +205,17 @@ void setDisplayParameters(void)
 
 // Abhängig von aktueller Zeit wird displayRedrawRequired gesetzt
 void setRewdrawDisplayMeasure(void) 
-{
+{   
+    // if(displaySettingState)                         // um aktuelle Einstellung am Poti zu sehen bevor bestätigt wird
+    // {
+    //     displayRedrawRequired = true;
+    // }
     if(stateDisplayMeasureRequest && (millis() >= nextTimeMeasureRedrawed))
     {
         displayRedrawRequired = true;
         nextTimeMeasureRedrawed += DISPLAY_REDRAW_TIME_MEASURE;
     }
+
 
 }
 
@@ -213,6 +223,7 @@ void setRewdrawDisplayMeasure(void)
 // Abhängig von displaySettingState können Werte bearbeitet
 void setSettings(void)
 {
+    
     switch(displayPage)
     {
         case 1:   //Seite 1
@@ -220,7 +231,16 @@ void setSettings(void)
 
         case 2:   //Seite 2
             if(displayLine == 1)
-            targetSoilMoisture = readPoti(0, 65);
+            {
+            temporaryTargetSoilMoisture = readPoti(0, 65);
+            if(displaySettingState == 2)
+            {
+                Serial.println("ZUGEWIESEN!");
+                targetSoilMoisture = temporaryTargetSoilMoisture;
+                displaySettingState = 0;
+                displayLine = 0;                                //Löschen, wenn nicht mit displayLine zurückgesprungen werden soll
+            }
+            }
           
             if((displayLine == 2) && isPumpRunning && ((uiKeyCode == KEY_DOWN) || (uiKeyCode == KEY_UP)))     //Wenn Pumpe an 
             {
@@ -258,6 +278,7 @@ void setSettings(void)
           //NOCH FERTIG MACHEN
           break;
     }
+    displayRedrawRequired = true;
 }
 
 
@@ -311,7 +332,9 @@ void printDisplayPage(void) {
                 u8g.print("%");
                 u8g.setPrintPos(13, 23);
                 u8g.print("SOLL-WERT: ");
-                if (displayLine == 1) {
+
+                //Wenn displaySettingState noch nicht freigeschaltet -> targetSoilMoisture anzeigen
+                if (displayLine == 1 && !displaySettingState) {             
                     u8g.drawBox(85, 24, u8g.getStrWidth("60.00%") + 6, 10);
                     u8g.setDefaultBackgroundColor();
                     if (targetSoilMoisture >= 10) u8g.setPrintPos(88, 23);  //Wenn zwei Zahlen vorm Komma
@@ -320,12 +343,29 @@ void printDisplayPage(void) {
                     u8g.print("%");
                     u8g.setDefaultForegroundColor();
                 }
-                else {
-                    if (targetSoilMoisture >= 10) u8g.setPrintPos(88, 23);  //Wenn zwei Zahlen vorm Komma
+
+                // Wenn displaySettingsState auf 1 -> temporaryTargetSoilMoisture anzeigen
+                else if(displayLine == 1 && displaySettingState == 1)       
+                {
+                    u8g.drawBox(85, 24, u8g.getStrWidth("60.00%") + 6, 10);
+                    u8g.setDefaultBackgroundColor();
+                    if (temporaryTargetSoilMoisture >= 10) u8g.setPrintPos(88, 23);  //Wenn zwei Zahlen vorm Komma
                     else u8g.setPrintPos(94, 23);                           //Wenn eine Zahl vorm Komma
+                    u8g.print(temporaryTargetSoilMoisture);
+                    u8g.print("%");
+                    u8g.setDefaultForegroundColor();
+                }
+
+                // Wenn targetSoilMoisture nicht angewählt ist -> targetSoilMoisture anzeigen
+                else {                                                     
+                    if (targetSoilMoisture >= 10) u8g.setPrintPos(88, 23);  // Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(94, 23);                           // Wenn eine Zahl vorm Komma
                     u8g.print(targetSoilMoisture);
                     u8g.print("%");
                 }
+
+
+                // Pumpe
                 if (displayLine == 2) {
                     u8g.drawBox(101, 44, u8g.getStrWidth("OFF") + 8, 14);
                     u8g.setDefaultBackgroundColor();
