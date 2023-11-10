@@ -31,9 +31,11 @@ void setMotorDriverPowerSupply(bool newState) {
 void setAnalogSensorsPowerSupply(bool newState) {
     if(newState) {
         digitalWrite(PIN_MOSFET_ANALOGS, HIGH);
+        Serial.println("Sensorstrom AN");
     }
     else {
         digitalWrite(PIN_MOSFET_ANALOGS, LOW);
+        Serial.println("Sensorstrom AUS");
     }
 }
 
@@ -49,6 +51,12 @@ void manageSensorPowerSupplies() {
     static uint8_t previousDisplayMeasureRequest;
     static uint32_t analogSensorsTurnOnTime;
     static bool hasRequests;
+
+    // Serial.println(stateArrayMeasureRequest & 2);
+    // Serial.println(stateArrayMeasureRequest & 4);
+    // Serial.println(stateDisplayMeasureRequest & 2);
+    // Serial.println(stateDisplayMeasureRequest & 4);
+    // Serial.println();
 
     if (previousArrayMeasureRequest != stateArrayMeasureRequest || previousDisplayMeasureRequest != stateDisplayMeasureRequest) {
         if (stateArrayMeasureRequest & 128 || stateDisplayMeasureRequest & 128) {
@@ -82,13 +90,13 @@ void manageSensorPowerSupplies() {
         previousDisplayMeasureRequest = stateDisplayMeasureRequest;
     }
     
-    if (millis() - analogSensorsTurnOnTime >= ANALOG_SENSORS_PUFFER_TIME) {
-        stateMeasureAllowed |= 2;
-        stateMeasureAllowed |= 4;
-    }
-    else if (!hasRequests) {
+    if (!hasRequests) {
         stateMeasureAllowed &= ~2;
         stateMeasureAllowed &= ~4;
+    }
+    else if (millis() - analogSensorsTurnOnTime >= ANALOG_SENSORS_PUFFER_TIME) {
+        stateMeasureAllowed |= 2;
+        stateMeasureAllowed |= 4;
     }
 }
 

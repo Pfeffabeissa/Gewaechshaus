@@ -45,7 +45,7 @@
 #define AVERAGE_VALUE_INCLUDE_TIME 1800000
 
 // Zeitintervall zwischen Durchschnittsmessungen und tatsächlichen Messungen für Display
-#define ARRAY_MEASURE_INTERVAL 60000
+#define ARRAY_MEASURE_INTERVAL 10000
 #define ACTUAL_MEASURE_INTERVAL 1000
 
 // Eine Periodenlänge des Bewässerungsvorgangs

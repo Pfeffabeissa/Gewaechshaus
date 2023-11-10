@@ -19,11 +19,13 @@ void arrayMeasure() {
     static bool isArrayMeasurePending = false;
 
     if (!isArrayMeasurePending && checkArrayMeasureSchedule()) {
+        Serial.println("ArrayMeasure PENDING");
         setArrayMeasureRequests(true);
         isArrayMeasurePending = true;
     }
 
     if (isArrayMeasurePending && isArrayMeasureAllowed()) {
+        Serial.println("ArrayMeasure NOT PENDING");
         executeArrayMeasures();
         setArrayMeasureRequests(false);
         isArrayMeasurePending = false;
@@ -37,7 +39,9 @@ void actualMeasure() {
 
     if (checkActualMeasureSchedule() && !isActualMeasurePending && stateDisplayMeasureRequest > 0) {
         isActualMeasurePending = true;
+        Serial.println("ActualMeasure PENDING");
     }
+    
     
     if (isActualMeasurePending) {
         if (executeActualMeasures()) { 
@@ -48,7 +52,7 @@ void actualMeasure() {
 
 // Überprüft, ob das Arraymessungszeitintervall abgelaufen ist
 bool checkArrayMeasureSchedule() {
-    static uint8_t nextArrayMeasureTime = 0;
+    static uint32_t nextArrayMeasureTime = 0;
     if (millis() >= nextArrayMeasureTime) {
         nextArrayMeasureTime += ARRAY_MEASURE_INTERVAL;
         return true;
@@ -60,7 +64,7 @@ bool checkArrayMeasureSchedule() {
 
 // Überprüft, ob das tatsächliche Messungszeitintervall abgelaufen ist
 bool checkActualMeasureSchedule() {
-    static uint8_t nextActualMeasureTime = 0;
+    static uint32_t nextActualMeasureTime = 0;
     if (millis() >= nextActualMeasureTime) {
         nextActualMeasureTime += ACTUAL_MEASURE_INTERVAL;
         return true;
@@ -148,33 +152,34 @@ bool executeActualMeasures() {
     else counter++;
     if (stateDisplayMeasureRequest & 2) {
         if (stateMeasureAllowed & 2) {
-            actualTemperatureOutside = readNtcTemperature();
-           counter++;
+            actualSoilMoisture = readSoilMoisture();
+            counter++;
         }
     }
     else counter++;
     if (stateDisplayMeasureRequest & 4) {
         if (stateMeasureAllowed & 4) {
-            actualTemperatureInside = readBmeTemperature();
+            actualTemperatureOutside = readNtcTemperature();
             counter++;
         }
     }
     else counter++;
     if (stateDisplayMeasureRequest & 64) {
         if (stateMeasureAllowed & 64) {
-            actualSoilMoisture = readSoilMoisture();
+            actualTemperatureInside = readBmeTemperature();
             counter++;
         }
     }
     else counter++;
+    
     if (stateDisplayMeasureRequest & 128) {
         if (stateMeasureAllowed & 128) {
-            Serial.println("feuchtigkeit");
             actualAirHumidity = readBmeHumidity();
             counter++;
         }
     }
     else counter++;
+    Serial.println(counter);
 
     if (counter == 5) return true;
     else return false;
@@ -186,5 +191,5 @@ float average(float array[], uint8_t amountOfMeasurements) {
     for (int i = 0; i < amountOfMeasurements; i++) {
         sum += array[i];
     }
-    return sum/amountOfMeasurements;
+    return int(sum/amountOfMeasurements * 100) / 100;
 }

@@ -471,12 +471,12 @@ void printDisplayPage(void) {
                 u8g.setPrintPos(10, 32);
                 u8g.print("Temp. A: ");
                 u8g.print(averageTemperatureOutside);
-                u8g.print(0xb0);
+                u8g.write(0xb0);
                 u8g.print("C");
                 u8g.setPrintPos(10, 42);
                 u8g.print("Temp. innen: ");
                 u8g.print(averageTemperatureInside);
-                u8g.print(0xb0);
+                u8g.write(0xb0);
                 u8g.print("C");
                 u8g.setPrintPos(10, 52);
                 u8g.print("Bodenfeuchte: ");
