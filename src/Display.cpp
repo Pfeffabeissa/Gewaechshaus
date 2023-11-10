@@ -206,17 +206,11 @@ void setDisplayParameters(void)
 // Abhängig von aktueller Zeit wird displayRedrawRequired gesetzt
 void setRewdrawDisplayMeasure(void) 
 {   
-    // if(displaySettingState)                         // um aktuelle Einstellung am Poti zu sehen bevor bestätigt wird
-    // {
-    //     displayRedrawRequired = true;
-    // }
     if(stateDisplayMeasureRequest && (millis() >= nextTimeMeasureRedrawed))
     {
         displayRedrawRequired = true;
         nextTimeMeasureRedrawed += DISPLAY_REDRAW_TIME_MEASURE;
     }
-
-
 }
 
 
@@ -261,7 +255,8 @@ void setSettings(void)
             if(displaySettingState == 2)
             {  
               targetRoofPosition = temporaryTargetRoofPosition;
-              displaySettingState = 1;
+              displaySettingState = 0;
+              displayLine = 0;                                 //Löschen, wenn nicht mit displayLine zurückgesprungen werden soll
             }
           }
 
@@ -413,7 +408,20 @@ void printDisplayPage(void) {
                 u8g.setPrintPos(13, 23);
                 u8g.print("SOLL-WERT: ");
 
-                if (displayLine == 1) {
+                //Wenn displaySettingState noch nicht freigeschaltet -> targetRoofPosition anzeigen
+                if (displayLine == 1 && !displaySettingState) {
+                    u8g.drawBox(85, 24, u8g.getStrWidth("100%") + 6, 10);
+                    u8g.setDefaultBackgroundColor();
+                    if (targetRoofPosition >= 100) u8g.setPrintPos(88, 23);        //Wenn drei Zahlen vorm Komma
+                    else if (targetRoofPosition >= 10) u8g.setPrintPos(94, 23);    //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(100, 23);                                          //Wenn eine Zahl vorm Komma
+                    u8g.print(targetRoofPosition);
+                    u8g.print("%");
+                    u8g.setDefaultForegroundColor();
+                }
+                
+                // Wenn displaySettingsState auf 1 -> temporaryTargetRoofPosition anzeigen
+                else if (displayLine == 1 && displaySettingState == 1) {
                     u8g.drawBox(85, 24, u8g.getStrWidth("100%") + 6, 10);
                     u8g.setDefaultBackgroundColor();
                     if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);        //Wenn drei Zahlen vorm Komma
@@ -423,12 +431,15 @@ void printDisplayPage(void) {
                     u8g.print("%");
                     u8g.setDefaultForegroundColor();
                 }
+
+                // Wenn temporaryTargetRoofPosition nicht angewählt ist -> targetRoofPosition anzeigen
                 else {
-                    if (temporaryTargetRoofPosition >= 100) u8g.setPrintPos(88, 23);        //Wenn zwei Zahlen vorm Komma
-                    else if (temporaryTargetRoofPosition >= 10) u8g.setPrintPos(94, 23);    //Wenn zwei Zahlen vorm Komma
-                    else u8g.setPrintPos(100, 23);                                          //Wenn eine Zahl vorm Komma
-                    if (temporaryTargetRoofPosition != 100) u8g.print(temporaryTargetRoofPosition);
-                    else u8g.print("100");
+                    if (targetRoofPosition >= 100) u8g.setPrintPos(88, 23);        //Wenn zwei Zahlen vorm Komma
+                    else if (targetRoofPosition >= 10) u8g.setPrintPos(94, 23);    //Wenn zwei Zahlen vorm Komma
+                    else u8g.setPrintPos(100, 23);                                 //Wenn eine Zahl vorm Komma
+                    // if (targetRoofPosition != 100)   // ????
+                    // else u8g.print("100");
+                    u8g.print(targetRoofPosition);
                     u8g.print("%");
                 }
             } while (u8g.nextPage());
@@ -462,16 +473,16 @@ void printDisplayPage(void) {
                 u8g.print(averageTemperatureOutside);
                 u8g.print(0xb0);
                 u8g.print("C");
-                u8g.setPrintPos(10, 23);
+                u8g.setPrintPos(10, 42);
                 u8g.print("Temp. innen: ");
                 u8g.print(averageTemperatureInside);
                 u8g.print(0xb0);
                 u8g.print("C");
-                u8g.setPrintPos(10, 42);
+                u8g.setPrintPos(10, 52);
                 u8g.print("Bodenfeuchte: ");
                 u8g.print(averageSoilMoisture);
                 u8g.print("%");
-                u8g.setPrintPos(10, 52);
+                u8g.setPrintPos(10, 62);
                 u8g.print("Luftfeuchte: ");
                 u8g.print(averageAirHumidity);
                 u8g.print("%");
