@@ -94,12 +94,17 @@ void manageSensorPowerSupplies() {
     }
 }
 
-// Checkt Requests an Sensoren und erteilt Erlaubnis
+// Checkt Requests an Motoren und erteilt Erlaubnis
 void manageMotorPowerSupplies() {
     static uint8_t previousMotorRequest;
     static uint32_t motorDriverTurnOnTime;
     static bool hasRequests;
 
+    // Wenn Motorregler nicht an und keine Änderung bzgl Motoranfrage
+    if(!hasRequests && (previousMotorRequest == stateMotorRequest))
+        return;
+
+    // Wenn Motor verändert werden soll
     if (previousMotorRequest != stateMotorRequest) {
         if (stateMotorRequest & 1 || stateMotorRequest & 2) {
             hasRequests = true;
@@ -112,12 +117,14 @@ void manageMotorPowerSupplies() {
         }
         previousMotorRequest = stateMotorRequest;
     }
-    if (millis() - motorDriverTurnOnTime >= MOTOR_DRIVER_PUFFER_TIME) {
+
+    
+    if (hasRequests && (millis() - motorDriverTurnOnTime >= MOTOR_DRIVER_PUFFER_TIME)) {
         stateMotorAllowed |= 1;
         stateMotorAllowed |= 2;
     }
     else if (!hasRequests) {
+        stateMotorAllowed &= ~1;
         stateMotorAllowed &= ~2;
-        stateMotorAllowed &= ~4;
     }
 }

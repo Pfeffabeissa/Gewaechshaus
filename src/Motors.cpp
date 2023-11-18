@@ -85,22 +85,33 @@ void managePump() {
     static uint32_t cycleStartTime = 0;
     if (!isPumpRunning) {
         if (isIrrigationRequired) {
-            isPumpRunning = true;
-            cycleStartTime = millis();
+            stateMotorRequest |= 2;
+            if(stateMotorAllowed & 2)
+            {
+                isPumpRunning = true;
+                Serial.println("Pumpe gestartet");
+                cycleStartTime = millis();
+            }
         }
     }
     else {
         if  (millis() - cycleStartTime <= IRRIGATION_CYCLE_LENGTH) {
-            if (millis() - cycleStartTime <= IRRIGATION_CYCLE_LENGTH / 2) {
-                regulatePump((millis() - cycleStartTime) / (IRRIGATION_CYCLE_LENGTH / 2));
+            if (millis() - cycleStartTime <= (IRRIGATION_CYCLE_LENGTH / 2)) {
+                regulatePump((millis() - cycleStartTime)*100 / (IRRIGATION_CYCLE_LENGTH / 2));          // (0...1) * 100 : enspricht Pumpengeschwindigkeit
+                Serial.print("Pumpengeschwindigkeit: ");
+                Serial.println((millis() - cycleStartTime)*100 / (IRRIGATION_CYCLE_LENGTH / 2));
             }
             else {
-                regulatePump(100 - ((millis() - cycleStartTime) / IRRIGATION_CYCLE_LENGTH));
+                regulatePump(100 - ((millis() - (cycleStartTime + IRRIGATION_CYCLE_LENGTH / 2))*100 / (IRRIGATION_CYCLE_LENGTH / 2)));
+                Serial.print("Pumpengeschwindigkeit: ");
+                Serial.println(100 - ((millis() - (cycleStartTime + IRRIGATION_CYCLE_LENGTH / 2))*100 / (IRRIGATION_CYCLE_LENGTH / 2)));
             }
         }
         else {
             regulatePump(0);
             isPumpRunning = false;
+            stateMotorRequest &= ~2;
+            Serial.println("Pumpe ausgeschaltet");
         }
     }
 }
