@@ -21,9 +21,11 @@ void setSystemPowerSupply(bool newState) {
 void setMotorDriverPowerSupply(bool newState) {
     if(newState) {
         digitalWrite(PIN_MOSFET_MOTOR_DRIVERS, HIGH);
+        Serial.println("Motorstrom AN");
     }
     else {
         digitalWrite(PIN_MOSFET_MOTOR_DRIVERS, LOW);
+        Serial.println("Motorstrom AUS");
     }
 }
 
@@ -31,11 +33,9 @@ void setMotorDriverPowerSupply(bool newState) {
 void setAnalogSensorsPowerSupply(bool newState) {
     if(newState) {
         digitalWrite(PIN_MOSFET_ANALOGS, HIGH);
-        Serial.println("Sensorstrom AN");
     }
     else {
         digitalWrite(PIN_MOSFET_ANALOGS, LOW);
-        Serial.println("Sensorstrom AUS");
     }
 }
 
@@ -51,12 +51,6 @@ void manageSensorPowerSupplies() {
     static uint8_t previousDisplayMeasureRequest;
     static uint32_t analogSensorsTurnOnTime;
     static bool hasRequests;
-
-    // Serial.println(stateArrayMeasureRequest & 2);
-    // Serial.println(stateArrayMeasureRequest & 4);
-    // Serial.println(stateDisplayMeasureRequest & 2);
-    // Serial.println(stateDisplayMeasureRequest & 4);
-    // Serial.println();
 
     if (previousArrayMeasureRequest != stateArrayMeasureRequest || previousDisplayMeasureRequest != stateDisplayMeasureRequest) {
         if (stateArrayMeasureRequest & 128 || stateDisplayMeasureRequest & 128) {

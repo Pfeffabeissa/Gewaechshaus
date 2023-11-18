@@ -44,7 +44,7 @@ void manageDisplayfunctions(void)
         if(displaySettingState == 1)    
             setSettings();              // Um Display und Werte zu aktualisieren, wenn über Poti neue Werte eingestellt werden
         
-        //Wenn uiKeyCode == 0, keine Tasteränderung im letzten Programmdurchlauf
+        //Wenn uiKeyCode == 0 entspricht keiner Tasteränderung im letzten Programmdurchlauf
         if(uiKeyCode)
         {
             setDisplayParameters();
@@ -72,8 +72,8 @@ void switchDisplayOnOff(void)
         displayLine = 0;
         displaySettingState = 0;
         displayRedrawRequired = true;
-        uiKeyCodeFirst = KEY_NONE;
-        uiKeyCodeLast = KEY_ENTER;         //da sonst direkt in checkDisplayUserInput KEY_ENTER gesetzt wird
+        uiKeyCodeFirst = KEY_ENTER;         // um nachfolgend einmalig setDisplayParameters() in managefunctions() aufzurufen, da dann Seite 1 sofort Messwerte anzeigt
+        uiKeyCodeLast = KEY_NONE;           // " - "            // wenn nicht gewünscht: uiKeyCodeFirst = KEY_NONE und uiKeyCodeLast = KEY_ENTER
         uiKeyCode = KEY_NONE;
     }
 
@@ -87,7 +87,6 @@ void switchDisplayOnOff(void)
         displayRedrawRequired = false;
 
         printDisplayPage();         //um Display auszuschalten
-
     }
 }
 

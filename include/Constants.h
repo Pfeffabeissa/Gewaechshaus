@@ -39,7 +39,7 @@
 // Wartezeit bis zur ersten Messung der analogen Sensoren nach erster Stromversorgung
 #define ANALOG_SENSORS_PUFFER_TIME 300
 // Wartezeit bis zur ersten Motoraktion nach der ersten Stromversorgung des Motortreibers
-#define MOTOR_DRIVER_PUFFER_TIME 300
+#define MOTOR_DRIVER_PUFFER_TIME 3000
 
 // Zeitdauer, wie lange Messwerte aus der Vergangenheit für Durchschnittswerte miteinbezogen werden sollen
 #define AVERAGE_VALUE_INCLUDE_TIME 1800000
@@ -67,7 +67,7 @@
 #define KEY_NEXT 2
 #define KEY_UP 3
 #define KEY_DOWN 4
-#define DISPLAY_PUFFER_ON_TIME 10000            //[ms]
+#define DISPLAY_PUFFER_ON_TIME 30000            //[ms]
 #define DISPLAY_REDRAW_TIME_MEASURE 1000        //Zeit, wann Display aktualisiert werden soll wenn Seite mit aktuellen Messdaten angezeigt [ms]
 #define DISPLAY_NUMBER_PAGES 6                  //Anzahl der Seiten
 #define DISPLAY_NUMBER_LINES_2 2                //Anzahl der möglichen bearbeitbaren Zeilen Seite 2

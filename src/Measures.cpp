@@ -19,13 +19,11 @@ void arrayMeasure() {
     static bool isArrayMeasurePending = false;
 
     if (!isArrayMeasurePending && checkArrayMeasureSchedule()) {
-        Serial.println("ArrayMeasure PENDING");
         setArrayMeasureRequests(true);
         isArrayMeasurePending = true;
     }
 
     if (isArrayMeasurePending && isArrayMeasureAllowed()) {
-        Serial.println("ArrayMeasure NOT PENDING");
         executeArrayMeasures();
         setArrayMeasureRequests(false);
         isArrayMeasurePending = false;
@@ -39,7 +37,6 @@ void actualMeasure() {
 
     if (checkActualMeasureSchedule() && !isActualMeasurePending && stateDisplayMeasureRequest > 0) {
         isActualMeasurePending = true;
-        Serial.println("ActualMeasure PENDING");
     }
     
     
@@ -179,7 +176,6 @@ bool executeActualMeasures() {
         }
     }
     else counter++;
-    Serial.println(counter);
 
     if (counter == 5) return true;
     else return false;
@@ -191,5 +187,5 @@ float average(float array[], uint8_t amountOfMeasurements) {
     for (int i = 0; i < amountOfMeasurements; i++) {
         sum += array[i];
     }
-    return int(sum/amountOfMeasurements * 100) / 100;
+    return sum/amountOfMeasurements;
 }

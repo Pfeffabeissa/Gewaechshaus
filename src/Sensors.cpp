@@ -37,7 +37,6 @@ float readNtcTemperature()
 {
     float analogValue = (analogRead(PIN_SENSOR_NTC) * REFERENCE_VOLTAGE) / 1023;            // Einlesen der Spannung vom Spannungsteiler
     float rNtc = analogValue / (REFERENCE_VOLTAGE - analogValue) * RESISTOR_R3;             // Widerstand vom NTC
-    Serial.println((1 / ((log(rNtc/NTC_RN) / NTC_B) + 1 / (NTC_TN + 273.15))) - 273.15 -1.2);
     return (1 / ((log(rNtc/NTC_RN) / NTC_B) + 1 / (NTC_TN + 273.15))) - 273.15 -1.2;        // Offset miteinberechnet   
 }
 

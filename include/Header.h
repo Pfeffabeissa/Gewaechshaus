@@ -63,7 +63,7 @@ int readPoti(int min, int max);
 void manageMotors();
 void manageRoofMotor();
 void managePump();
-void regulateRoofMotor(int speed);
+void regulateRoofMotor(int8_t speed);
 void regulatePump(int speed);
 
 void initializeDisplay();
