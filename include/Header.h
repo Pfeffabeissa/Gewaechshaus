@@ -28,6 +28,7 @@ extern float targetSoilMoisture;
 
 extern uint8_t targetRoofPosition;
 extern uint8_t actualRoofPosition;
+extern uint8_t requiredPumpCycles;      
 extern bool isIrrigationRequired;
 extern bool isPumpRunning;
 
@@ -63,6 +64,7 @@ int readPoti(int min, int max);
 void manageMotors();
 void manageRoofMotor();
 void managePump();
+int switchPump(bool pumpShouldStart = 0);
 void regulateRoofMotor(int8_t speed);
 void regulatePump(int speed);
 

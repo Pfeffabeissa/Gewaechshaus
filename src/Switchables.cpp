@@ -100,7 +100,7 @@ void manageMotorPowerSupplies() {
     static uint32_t motorDriverTurnOnTime;
     static bool hasRequests;
 
-    // Wenn Motorregler nicht an und keine Änderung bzgl Motoranfrage
+    // Wenn Motortreiber nicht an und keine Änderung bzgl Motoranfrage
     if(!hasRequests && (previousMotorRequest == stateMotorRequest))
         return;
 
@@ -118,11 +118,12 @@ void manageMotorPowerSupplies() {
         previousMotorRequest = stateMotorRequest;
     }
 
-    
+    // Einschaltverzögerung aufgrund Pufferzeit
     if (hasRequests && (millis() - motorDriverTurnOnTime >= MOTOR_DRIVER_PUFFER_TIME)) {
         stateMotorAllowed |= 1;
         stateMotorAllowed |= 2;
     }
+    // Zurücksetzen von stateMotorAllowed
     else if (!hasRequests) {
         stateMotorAllowed &= ~1;
         stateMotorAllowed &= ~2;

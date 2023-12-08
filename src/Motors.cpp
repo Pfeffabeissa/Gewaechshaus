@@ -6,8 +6,10 @@ uint8_t targetRoofPosition;
 uint8_t actualRoofPosition;
 uint8_t stateMotorRequest;
 uint8_t stateMotorAllowed;
+uint8_t requiredPumpCycles;     // wird in Rechenfunktion gesetzt für automatische Bewässerung
 bool isPumpRunning;
 bool isIrrigationRequired;
+
 
 // Ruft alle Funktionen für Motor und Pumpensteuerung auf
 void manageMotors() {
@@ -80,42 +82,6 @@ void manageRoofMotor() {
     }
 }
 
-// Steuert Ausführung des Beässerungszyklus bei manueller Anfrage
-void managePump() {
-    static uint32_t cycleStartTime = 0;
-    if (!isPumpRunning) {
-        if (isIrrigationRequired) {
-            stateMotorRequest |= 2;
-            if(stateMotorAllowed & 2)
-            {
-                isPumpRunning = true;
-                Serial.println("Pumpe gestartet");
-                cycleStartTime = millis();
-            }
-        }
-    }
-    else {
-        if  (millis() - cycleStartTime <= IRRIGATION_CYCLE_LENGTH) {
-            if (millis() - cycleStartTime <= (IRRIGATION_CYCLE_LENGTH / 2)) {
-                regulatePump((millis() - cycleStartTime)*100 / (IRRIGATION_CYCLE_LENGTH / 2));          // (0...1) * 100 : enspricht Pumpengeschwindigkeit
-                Serial.print("Pumpengeschwindigkeit: ");
-                Serial.println((millis() - cycleStartTime)*100 / (IRRIGATION_CYCLE_LENGTH / 2));
-            }
-            else {
-                regulatePump(100 - ((millis() - (cycleStartTime + IRRIGATION_CYCLE_LENGTH / 2))*100 / (IRRIGATION_CYCLE_LENGTH / 2)));
-                Serial.print("Pumpengeschwindigkeit: ");
-                Serial.println(100 - ((millis() - (cycleStartTime + IRRIGATION_CYCLE_LENGTH / 2))*100 / (IRRIGATION_CYCLE_LENGTH / 2)));
-            }
-        }
-        else {
-            regulatePump(0);
-            isPumpRunning = false;
-            stateMotorRequest &= ~2;
-            Serial.println("Pumpe ausgeschaltet");
-        }
-    }
-}
-
 // Steuert alle Pins verantwortlich für die Steuerung des Dachs an
 // ]0; 100] öffnen das Dach, [-100; 0[ schließen das Dach, 0 hält an
 void regulateRoofMotor(int8_t speed) {
@@ -135,6 +101,80 @@ void regulateRoofMotor(int8_t speed) {
         analogWrite(PIN_ROOF_SPEED, 0);
     }
 }
+
+
+
+
+
+// Steuert Ausführung des Beässerungszyklus bei manueller Anfrage bzw Automatischer
+void managePump() {                   
+
+    // Pumpe ist augeschalten
+    if (!isPumpRunning) {
+        if (isIrrigationRequired || requiredPumpCycles != 0) {
+            stateMotorRequest |= 2;
+            if(stateMotorAllowed & 2)
+            {
+                isPumpRunning = true;
+                switchPump(1);              // Pumpe starten
+                Serial.println("Pumpe gestartet");
+            }
+        }
+    }
+
+
+    // Pumpe läuft
+    else if(isPumpRunning)
+    {   
+        // Ausschaltbedingungen
+        if(!isIrrigationRequired && !requiredPumpCycles)
+        {   
+            isPumpRunning = false;
+            regulatePump(0);            // Pumpe zur Sicherheit nochmals ausschalten
+            stateMotorRequest &= ~2;    // Pumpenanfrage zum Ausschalten stellen
+            Serial.println("Pumpe ausgeschaltet");
+        }
+        
+        // Pumpenzyklus beendet
+        else if(switchPump())
+        {
+            requiredPumpCycles--;
+            switchPump(1);          // Pumpe erneut wieder einschalten
+        }
+    }
+}
+
+
+
+// Steuert Pumpe genau einen Zyklus lang
+// Übergabeparameter 1 wenn Pumpe gestartet wird
+// Rückgabeparameter 1 wenn Pumpe mit Zyklus fertig
+int switchPump(bool pumpShouldStart)
+{
+    static uint32_t cycleStartTime = 0;
+
+    if(pumpShouldStart)
+        cycleStartTime = millis();
+
+    if  (millis() - cycleStartTime <= IRRIGATION_CYCLE_LENGTH) {
+            if (millis() - cycleStartTime <= (IRRIGATION_CYCLE_LENGTH / 2)) {
+                regulatePump((millis() - cycleStartTime)*100 / (IRRIGATION_CYCLE_LENGTH / 2));          // Pumpengeschwindigkeit in %
+                Serial.print("Pumpengeschwindigkeit: ");
+                Serial.println((millis() - cycleStartTime)*100 / (IRRIGATION_CYCLE_LENGTH / 2));
+            }
+            else {
+                regulatePump(100 - ((millis() - (cycleStartTime + IRRIGATION_CYCLE_LENGTH / 2))*100 / (IRRIGATION_CYCLE_LENGTH / 2)));
+                Serial.print("Pumpengeschwindigkeit: ");
+                Serial.println(100 - ((millis() - (cycleStartTime + IRRIGATION_CYCLE_LENGTH / 2))*100 / (IRRIGATION_CYCLE_LENGTH / 2)));
+            }
+        }
+        else {
+            regulatePump(0);
+            return 1;
+        }
+    return 0;
+}
+
 
 // Steuert alle Pins verantwortlich für die Steuerung der Pumpe
 // ]0; 100] regulieren die Geschwindigkeit, alles andere stoppt die Pumpe
